@@ -3,7 +3,7 @@ import { useState } from "react"
 import axios from "axios";
 import { useAuth } from "./authProvider";
 
-const BACKEND_URL="http://34.34.216.3/auth/login"
+const LOGIN_BE_URL=`${process.env.REACT_APP_BACKEND_HOSTNAME}/auth/login`
 
 function Login({redirect_to='/'}) {
     const navigate = useNavigate();
@@ -18,7 +18,7 @@ function Login({redirect_to='/'}) {
         axios(
             {
                 method:"post",
-                url: BACKEND_URL,
+                url: LOGIN_BE_URL,
                 headers:{'Content-Type':"application/json"},
                 withCredentials: false,
                 data: {"username": username, "password":password},

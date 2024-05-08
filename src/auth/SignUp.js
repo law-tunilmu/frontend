@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const BACKEND_URL = "http://34.34.216.3/auth/signup"
+const SIGN_UP_BE_URL = `${process.env.REACT_APP_BACKEND_HOSTNAME}/auth/signup`
 const ROLES = {"STUDENT": "STUDENT", "MENTOR": "MENTOR"};
 
 function SignUp() {
@@ -84,7 +84,7 @@ function SignUp() {
         axios(
             {
                 method:"post",
-                url: BACKEND_URL,
+                url: SIGN_UP_BE_URL,
                 headers:{'Content-Type':"application/json"},
                 withCredentials: false,
                 data: {
