@@ -4,15 +4,12 @@ import { useAuth } from './auth/authProvider'
 import { useNavigate } from 'react-router-dom'
 import { FaBars, FaXing, FaUserAlt } from 'react-icons/fa'
 import { Link, Outlet } from 'react-router-dom'
-import axios from 'axios'
 
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
   { name: 'My Course', href: '#', current: false },
   { name: 'Payment', href: '#', current: false },
 ]
-
-const BACKEND_HOST = "http://34.34.216.3"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -65,7 +62,7 @@ export default function Layout() {
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 {/* Profile dropdown */}
                 {
-                    token && <ProfileDropdown /> || 
+                    (token && <ProfileDropdown />) || 
                     (
                         <div className='invisible sm:visible'>
                             <LoginSignUp />
