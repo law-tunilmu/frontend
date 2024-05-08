@@ -29,8 +29,8 @@ function Login({redirect_to='/'}) {
                 navigate(redirect_to, { replace: true });
             }
         ).catch(err => {
-            if (err.response && err.response.status === 403) {
-                setErrMsg("Username and/or password are incorrect");
+            if (err.response) {
+                setErrMsg(err.response.data.description);
             } else {
                 setErrMsg("Network error, please try again later");
             }

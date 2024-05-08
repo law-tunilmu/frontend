@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const BACKEND_URL = "http://34.34.216.3/auth/signup"
-const ROLES = {"STUDENT": "STUDENT", "EDUCATOR": "MENTOR"};
+const ROLES = {"STUDENT": "STUDENT", "MENTOR": "MENTOR"};
 
 function SignUp() {
     const navigate = useNavigate();
@@ -100,8 +100,8 @@ function SignUp() {
             }
         ).catch(err => {
             let errorMsg = "Network Error. Please try again later.";
-            if(err.response && err.response.status == 403) {
-                errorMsg = `Username "${input.username}" is already existed or Email "${input.email}" has been used`;
+            if(err.response) {
+                errorMsg = err.response.data.description;
             } 
             setError(prev => ({
                 ...prev,
@@ -155,13 +155,13 @@ function SignUp() {
                                 </div>
                                 <div className="flex items-center gap-x-3">
                                     <input 
-                                        name="educatorRole" type="radio" 
+                                        name="mentorRole" type="radio" 
                                         className="h-4 w-4 border-gray-600 bg-gray-100 text-indigo-600 focus:ring-indigo-600"
-                                        checked={role === ROLES.EDUCATOR}
-                                        value={ROLES.EDUCATOR}
+                                        checked={role === ROLES.MENTOR}
+                                        value={ROLES.MENTOR}
                                         onChange={onRoleChange}
                                     />
-                                    <label for="educatorRole" className="block text-sm font-medium leading-6 text-gray-900">Educator</label>
+                                    <label for="mentorRole" className="block text-sm font-medium leading-6 text-gray-900">Mentor</label>
                                 </div>
                             </div>
                         </fieldset>

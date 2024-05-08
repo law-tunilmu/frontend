@@ -4,12 +4,15 @@ import { useAuth } from './auth/authProvider'
 import { useNavigate } from 'react-router-dom'
 import { FaBars, FaXing, FaUserAlt } from 'react-icons/fa'
 import { Link, Outlet } from 'react-router-dom'
+import axios from 'axios'
 
 const navigation = [
   { name: 'Dashboard', href: '/', current: true },
   { name: 'My Course', href: '#', current: false },
   { name: 'Payment', href: '#', current: false },
 ]
+
+const BACKEND_HOST = "http://34.34.216.3"
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -20,7 +23,7 @@ export default function Layout() {
 
     return (
     <>
-    <Disclosure as="nav" className="bg-gray-800 sticky top-0">
+    <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -118,7 +121,7 @@ function ProfileDropdown() {
   const navigate = useNavigate();
 
   function handleLogout() {
-    setToken();
+    setToken();  
     navigate("/", {'replace': true});
   }
 
