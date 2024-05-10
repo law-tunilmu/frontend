@@ -2,27 +2,44 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Login from './auth/login';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import Dashboard from './Dashboard';
 import Layout from './Layout';
 import AuthProvider from './auth/authProvider';
 import SignUp from './auth/SignUp';
+import CourseDetailView from './course/CourseDetailView';
+import { courseLoader } from './course/CourseLoader';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        index: true, element: <Dashboard />
+      },
+      {
+        path: "login", element: <Login />
+      },
+      {
+        path: "signup", element: <SignUp />
+      },
+      {
+        path: "course/:id", element: <CourseDetailView />,
+        loader: courseLoader
+      }
+    ]
+  }
+]);
+
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
       <AuthProvider>
-        <Routes>
-            <Route path='/' element={<Layout />}>
-              <Route index element={<Dashboard />} />
-              <Route path='login' element={<Login />} />
-              <Route path='signup' element={<SignUp />} />
-            </Route>
-        </Routes>
+        <RouterProvider router={router} />
       </AuthProvider>
-    </BrowserRouter>
   </React.StrictMode>
 );
 
