@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 export function CourseMiniView({courseHeaderData}) {
     const data = courseHeaderData;
     return (
-        <div key={data.id} className="border-2 border-solid flex flex-col gap-[0.5rem] px-2 py-2 w-full">
+        <div key={data.id} className="border-2 border-solid flex flex-col gap-1 px-2 py-2 w-full">
             <img 
                 src="https://res.cloudinary.com/dwlvcqj0u/image/upload/v1696150547/cld-sample-5.jpg"
                 className="w-full object-scale-down h-64 sm:h-80" 
