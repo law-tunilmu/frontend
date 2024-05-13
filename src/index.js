@@ -10,6 +10,7 @@ import AuthProvider from './auth/authProvider';
 import SignUp from './auth/SignUp';
 import CourseDetailView from './course/CourseDetailView';
 import { courseLoader } from './course/CourseLoader';
+import CourseEdit from './course/CourseEdit';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       },
       {
         path: "course/:id", element: <CourseDetailView />,
+        loader: courseLoader
+      },
+      {
+        path: "course/:id/edit", element: <CourseEdit />,
         loader: courseLoader
       }
     ]

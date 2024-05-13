@@ -20,7 +20,7 @@ function courseDummyData(id) {
     return (
         {
             "id":id,
-            "title":loremIpsum(),
+            "title":loremIpsum().slice(0, 100),
             "description":loremIpsum({p:4}),
             "price":120.99,
             "creator":loremIpsum(),

@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 
 import { useLoaderData } from "react-router-dom";
-import { FaAngleUp, FaAngleDown, FaLock } from "react-icons/fa";
+import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+
+import { useTruncatedElement } from "../utility/readMore";
 
 export default function CourseDetailView() {
     const courseHeader = useLoaderData();
@@ -77,27 +79,4 @@ export default function CourseDetailView() {
             </div>
         );
     }
-}
-
-
-function useTruncatedElement({ ref }) {
-    const [isTruncated, setIsTruncated] = useState(false);
-    const [isShowingMore, setIsShowingMore] = useState(false);
-
-    useEffect(() => {
-        const { offsetHeight, scrollHeight} = ref.current || {};
-        if (offsetHeight && scrollHeight && offsetHeight < scrollHeight) {
-            setIsTruncated(true);
-        } else {
-            setIsTruncated(false);
-        }
-    }, [ref]);
-
-    const toggleIsShowingMore = () => setIsShowingMore(prev => !prev);
-
-    return [
-        isTruncated,
-        isShowingMore,
-        toggleIsShowingMore
-    ];
 }
