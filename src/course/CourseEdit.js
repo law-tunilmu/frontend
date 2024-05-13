@@ -9,7 +9,6 @@ const PIC_EXTS = ["jpg", "jpeg", "png", "gif", "bmp"];
 
 export default function CourseEdit() {
     const courseHeader = useLoaderData();
-    const navigate  = useNavigate();
 
     const [ formData, setFormData ] = useState({
         "title": courseHeader.title,
@@ -24,10 +23,6 @@ export default function CourseEdit() {
         "description": "",
         "price": ""
     });
-
-    const handleCancel = () => {
-        navigate(`/course/${courseHeader.id}`);
-    }
 
     const handleReset = (htmlName) => {
         return () => {
@@ -68,91 +63,19 @@ export default function CourseEdit() {
         }
     }
 
-    const validateInput = (name, value) => {
-        let error = "";
-        const titleName = name[0].toUpperCase() + name.substring(1);
-        if (value) {
-            switch (name) {    
-                case "title":
-                    if (value.length > MAX_TITLE_CHAR) {
-                        error = `${titleName} must be less than ${MAX_TITLE_CHAR} characters`;
-                    }
-                    break;
-        
-                case "description":
-                    if (value.length > MAX_DESC_CHAR) {
-                        error = `${titleName} must be less than ${MAX_DESC_CHAR} characters`;
-                    }
-                    break;
-                case "price":
-                    if (!(parseFloat(value))) {
-                        error = `${titleName} must be a valid number`;
-                    }
-                    else if(parseFloat(value) < 0) {
-                        error = `${titleName} must be positive or zero`;
-                    }
-                    break;
-                case "picture":
-                    const file = value;
-                    if (file && file.size > MAX_PIC_SIZE*1_000_000) {
-                        error = `${titleName} is larger than ${MAX_PIC_SIZE}MB`;
-                    }
-                    else {
-                        const parts = file.name.split(".");
-                        const ext = parts[parts.length - 1].toLowerCase();
-                
-                        if (ext && !(PIC_EXTS.includes(ext))) {
-                            error = "File is not a valid image format";   
-                        }
-                    }
-                default:
-                    break;
-            }
-        } 
-        return error;
-    }
-
     const handleSubmit = (e) => {
         e.preventDefault();
     }
 
     
     if (!courseHeader) {
-        return (
-            <div className="flex flex-rows justify-center h-screen items-center">
-                <div className="w-fit h-fit p-2 bg-gray-200 mx-auto">
-                    <p className="font-bold text-md sm:text-xl text-gray-600">Oops! course is not found</p>
-                </div>
-            </div>
-        );
+        <CourseNotFoundPage />
     }
     else {
         return (
             <form action="" method="post" onSubmit={handleSubmit}>
                 <div className="bg-slate-800/90 sticky top-0 w-screen">
-                    <div className="sm:w-8/12 md:w-7/12 mx-auto flex flex-col sm:flex-row justify-center items-center
-                                w-full p-2 text-white ">
-                        <p className="py-2 mx-2 text-md sm:text-lg">Hit &#128293;<strong>Save</strong>&#128293; when you have done editing</p>
-                        <div>
-                            <button
-                                type="submit"
-                                className="mr-2 bg-indigo-500 hover:bg-indigo-500/70 
-                                        text-sm sm:text-lg font-bold 
-                                        py-2 px-4 rounded w-fit
-                                        focus:outline-none focus:shadow-outline">
-                                    &#128293;Save&#128293;
-                            </button>
-                            
-                            <button
-                                onClick={handleCancel}
-                                className="bg-orange-500 hover:bg-orange-400/50 
-                                        text-sm sm:text-lg font-bold 
-                                        py-2 px-4 rounded w-fit
-                                        focus:outline-none focus:shadow-outline">
-                                    Cancel
-                            </button>
-                        </div>                        
-                    </div>
+                    <SubmitAndCancel courseId={courseHeader.id} />
                 </div>
                 <div className="sm:w-8/12 md:w-7/12 mx-auto divide-y-2 divider-solid divide-slate-400">
                     <div className="flex flex-col">
@@ -257,10 +180,7 @@ export default function CourseEdit() {
                             </div>
                             {errors.price && <p className="text-red-500 font-semibold">{errors.price}</p>}
                         </div>
-                        {/*TODO: 
-                            1. handle check if user has read access
-                            2. handle onClick, buy the course
-                        */}
+                        
                         <div className="mt-2 flex items-center bg-gray-200 w-full h-[50rem]">
                             <div className="w-fit px-2 bg-gray-500 text-xl font-bold text-white mx-auto">
                                 Contents here?
@@ -271,4 +191,95 @@ export default function CourseEdit() {
             </form>
         );
     }
+}
+
+function SubmitAndCancel({courseId}) {
+    const navigate  = useNavigate();
+
+    const handleCancel = () => {
+        navigate(`/course/${courseId}`);
+    }
+
+    return (
+        <div className="
+                w-full sm:w-8/12 md:w-7/12 mx-auto p-2 text-white
+                flex flex-col sm:flex-row justify-center items-center">
+            <p className="py-2 mx-2 text-md sm:text-lg">
+                Hit &#128293;<strong>Save</strong>&#128293; when you have done editing
+            </p>
+            <div>
+                <button
+                    type="submit"
+                    className="mr-2 bg-indigo-500 hover:bg-indigo-500/70 
+                            text-sm sm:text-lg font-bold 
+                            py-2 px-4 rounded w-fit
+                            focus:outline-none focus:shadow-outline">
+                        &#128293;Save&#128293;
+                </button>
+                
+                <button
+                    onClick={handleCancel}
+                    className="bg-orange-500 hover:bg-orange-400/50 
+                            text-sm sm:text-lg font-bold 
+                            py-2 px-4 rounded w-fit
+                            focus:outline-none focus:shadow-outline">
+                        Cancel
+                </button>
+            </div>                        
+        </div>
+    );
+}
+
+function CourseNotFoundPage() {
+    return (
+        <div className="flex flex-rows justify-center h-screen items-center">
+            <div className="w-fit h-fit p-2 bg-gray-200 mx-auto">
+                <p className="font-bold text-md sm:text-xl text-gray-600">Oops! course is not found</p>
+            </div>
+        </div>
+    );
+}
+
+const validateInput = (name, value) => {
+    let error = "";
+    const titleName = name[0].toUpperCase() + name.substring(1);
+    if (value) {
+        switch (name) {    
+            case "title":
+                if (value.length > MAX_TITLE_CHAR) {
+                    error = `${titleName} must be less than ${MAX_TITLE_CHAR} characters`;
+                }
+                break;
+    
+            case "description":
+                if (value.length > MAX_DESC_CHAR) {
+                    error = `${titleName} must be less than ${MAX_DESC_CHAR} characters`;
+                }
+                break;
+            case "price":
+                if (!(parseFloat(value))) {
+                    error = `${titleName} must be a valid number`;
+                }
+                else if(parseFloat(value) < 0) {
+                    error = `${titleName} must be positive or zero`;
+                }
+                break;
+            case "picture":
+                const file = value;
+                if (file && file.size > MAX_PIC_SIZE*1_000_000) {
+                    error = `${titleName} is larger than ${MAX_PIC_SIZE}MB`;
+                }
+                else {
+                    const parts = file.name.split(".");
+                    const ext = parts[parts.length - 1].toLowerCase();
+            
+                    if (ext && !(PIC_EXTS.includes(ext))) {
+                        error = "File is not a valid image format";   
+                    }
+                }
+            default:
+                break;
+        }
+    } 
+    return error;
 }
