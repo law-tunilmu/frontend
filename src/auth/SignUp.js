@@ -153,7 +153,7 @@ function SignUp() {
                                         value={ROLES.STUDENT}
                                         onChange={onRoleChange}
                                     />
-                                    <label for="studentRole" className="block text-sm font-medium leading-6 text-gray-900">Student</label>
+                                    <label htmlFor="studentRole" className="block text-sm font-medium leading-6 text-gray-900">Student</label>
                                 </div>
                                 <div className="flex items-center gap-x-3">
                                     <input 
@@ -163,7 +163,7 @@ function SignUp() {
                                         value={ROLES.MENTOR}
                                         onChange={onRoleChange}
                                     />
-                                    <label for="mentorRole" className="block text-sm font-medium leading-6 text-gray-900">Mentor</label>
+                                    <label htmlFor="mentorRole" className="block text-sm font-medium leading-6 text-gray-900">Mentor</label>
                                 </div>
                             </div>
                         </fieldset>
@@ -193,7 +193,7 @@ function FieldLabel({name, placeholder, type="text", handleChange}) {
     const nameTitleCase = (name !== "confirmPassword") ? name.charAt(0).toUpperCase() + name.substring(1) : "Confirm Password";
     return (
         <>
-          <label for={name} className="block text-sm font-semibold leading-6 text-gray-600">{nameTitleCase}</label>
+          <label htmlFor={name} className="block text-sm font-semibold leading-6 text-gray-600">{nameTitleCase}</label>
           <div className="mt-2">
             <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-lg">
               <input 
