@@ -88,14 +88,15 @@ export default function CourseEdit() {
                     <SubmitAndCancel courseId={courseHeader.id} />
                 </div>
                 <div className="sm:w-8/12 md:w-7/12 mx-auto divide-y-2 divider-solid divide-slate-400">
-                    <div className="flex flex-col">
-                        <div className="h-fit w-full sm:w-7/12 md:w-6/12 sm:mx-auto">
+                    <div className="flex flex-col gap-2">
+                        <div className="h-fit w-full sm:w-7/12 md:w-6/12 mx-auto">
                             <img 
                                 src={
                                     (formData.picture && URL.createObjectURL(formData.picture)) || 
                                     courseHeader.picture_url
                                 } 
                                 className="object-scale-down h-64 sm:h-80"
+                                alt=""
                             />
                             {errors.picture && <p className="text-red-500 font-semibold">{errors.picture}</p>}
                         </div>
@@ -220,7 +221,7 @@ function SubmitAndCancel({courseId}) {
             <div>
                 <button
                     type="submit"
-                    className="mr-2 bg-indigo-500 hover:bg-indigo-500/70 
+                    className="mr-2 mb-2 bg-indigo-500 hover:bg-indigo-500/70 
                             text-sm sm:text-lg font-bold 
                             py-2 px-4 rounded w-fit
                             focus:outline-none focus:shadow-outline">
@@ -266,6 +267,7 @@ const validateInput = (name, value) => {
                     error = `${titleName} must be less than ${COURSE_CONST.MAX_DESC} characters`;
                 }
                 break;
+
             case "price":
                 if (!(parseFloat(value))) {
                     error = `${titleName} must be a valid number`;
@@ -274,6 +276,7 @@ const validateInput = (name, value) => {
                     error = `${titleName} must be positive or zero`;
                 }
                 break;
+
             case "picture":
                 const file = value;
                 if (file && file.size > COURSE_CONST.MAX_PIC_SIZE*1_000_000) {
@@ -287,6 +290,8 @@ const validateInput = (name, value) => {
                         error = "File is not a valid image format";   
                     }
                 }
+                break;
+
             default:
                 break;
         }
