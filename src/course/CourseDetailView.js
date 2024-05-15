@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, Link } from "react-router-dom";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 
 import { useTruncatedElement } from "../utility/readMore";
@@ -26,7 +26,7 @@ export default function CourseDetailView() {
         return (
             <div className="flex flex-col">
                 <div className="sm:w-8/12 md:w-7/12 mx-auto grow-1">
-                    <img src={courseHeader.picture_url} className="max-h-64 w-full sm:max-h-80 sm:w-7/12 md:w-6/12 sm:mx-auto"/>
+                    <img src={courseHeader.picture_url} alt="" className="max-h-64 w-full sm:max-h-80 sm:w-7/12 md:w-6/12 sm:mx-auto"/>
                     <div className="mt-3 grid grid-cols-1 w-11/12 mx-auto gap-y-1">
                         <div className="grid grid-cols-1">
                             <p ref={titleRef} className={`${!isShowingMoreTitle && 'line-clamp-2 sm:line-clamp-3'} font-bold text-lg w-full`}>
@@ -41,7 +41,7 @@ export default function CourseDetailView() {
                                 }
                         </div>
                         <p className="line-clamp-1 ellipsis pr-4 font-bold sm:w-11/12">
-                            Created by <a href="#" className="text-orange-500 text-sm">{courseHeader.creator}</a>
+                            Created by <Link to={`/mentor/courses/${courseHeader.creator}`} className="text-orange-500 text-sm">{courseHeader.creator}</Link>
                         </p>
                         <div>
                             <p ref={descRef} className={`text-justify break-words ${!isShowingMoreDesc && 'line-clamp-6'}`}>

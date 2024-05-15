@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Login from './auth/login';
-import { BrowserRouter, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import Dashboard from './Dashboard';
 import Layout from './Layout';
@@ -11,6 +11,9 @@ import SignUp from './auth/SignUp';
 import CourseDetailView from './course/CourseDetailView';
 import { courseLoader } from './course/CourseLoader';
 import CourseEdit from './course/CourseEdit';
+import { userLoader } from './auth/UserLoader';
+import { ProfileMePage } from './auth/ProfileMe';
+import { CreatedCourseMentor } from './auth/CreatedCourseMentor';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -35,6 +38,13 @@ const router = createBrowserRouter([
       {
         path: "course/:id/edit", element: <CourseEdit />,
         loader: courseLoader
+      },
+      {
+        path: "user/me", element: <ProfileMePage />,
+        loader: userLoader
+      },
+      {
+        path: "mentor/courses/:mentorUsername", element: <CreatedCourseMentor />
       }
     ]
   }

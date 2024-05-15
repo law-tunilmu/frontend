@@ -12,7 +12,7 @@ export function batchCourseLoader({ page, page_size }) {
     return data;
 }
 
-function courseDummyData(id) {
+export function courseDummyData(id) {
     const dateNow = new Date();
     let timestamp = `
         ${dateNow.getUTCFullYear()}-${dateNow.getUTCMonth()}-${dateNow.getUTCDay()} 
@@ -20,10 +20,10 @@ function courseDummyData(id) {
     return (
         {
             "id":id,
-            "title":loremIpsum().slice(0, 100),
-            "description":loremIpsum({p:4}),
+            "title":loremIpsum().join(" ").substring(0, 500),
+            "description":loremIpsum({p:4}).join(" "),
             "price":120.99,
-            "creator":loremIpsum(),
+            "creator":loremIpsum().join(" ").substring(0, 50),
             "picture_url":"https://res.cloudinary.com/dwlvcqj0u/image/upload/v1696150547/cld-sample-5.jpg",
             "createdAt":timestamp,
             "lastUpdateAt":timestamp,
