@@ -1,11 +1,21 @@
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { FaClockRotateLeft } from "react-icons/fa6";
+import { Link } from "react-router-dom";
+import COURSE_CONST from "./CourseConstants";
 
-const MAX_TITLE_CHAR = 500;
-const MAX_DESC_CHAR = 2000;
-const MAX_PIC_SIZE = 1; // in MB
-const PIC_EXTS = ["jpg", "jpeg", "png", "gif", "bmp"];
+export function EditCourseBtn({courseId}) {
+    return (
+        <Link to={`/course/${courseId}/edit`}>
+            <div className=" 
+                    text-white backdrop-blur-md rounded-md bg-orange-500 
+                    p-2 font-bold hover:bg-orange-500/50"
+            >
+                Edit
+            </div>
+        </Link>
+    );
+}
 
 export default function CourseEdit() {
     const courseHeader = useLoaderData();
@@ -246,14 +256,14 @@ const validateInput = (name, value) => {
     if (value) {
         switch (name) {    
             case "title":
-                if (value.length > MAX_TITLE_CHAR) {
-                    error = `${titleName} must be less than ${MAX_TITLE_CHAR} characters`;
+                if (value.length > COURSE_CONST.MAX_TITLE) {
+                    error = `${titleName} must be less than ${COURSE_CONST.MAX_TITLE} characters`;
                 }
                 break;
     
             case "description":
-                if (value.length > MAX_DESC_CHAR) {
-                    error = `${titleName} must be less than ${MAX_DESC_CHAR} characters`;
+                if (value.length > COURSE_CONST.MAX_DESC) {
+                    error = `${titleName} must be less than ${COURSE_CONST.MAX_DESC} characters`;
                 }
                 break;
             case "price":
@@ -266,14 +276,14 @@ const validateInput = (name, value) => {
                 break;
             case "picture":
                 const file = value;
-                if (file && file.size > MAX_PIC_SIZE*1_000_000) {
-                    error = `${titleName} is larger than ${MAX_PIC_SIZE}MB`;
+                if (file && file.size > COURSE_CONST.MAX_PIC_SIZE*1_000_000) {
+                    error = `${titleName} is larger than ${COURSE_CONST.MAX_PIC_SIZE}MB`;
                 }
                 else {
                     const parts = file.name.split(".");
                     const ext = parts[parts.length - 1].toLowerCase();
             
-                    if (ext && !(PIC_EXTS.includes(ext))) {
+                    if (ext && !(COURSE_CONST.PIC_EXTS.includes(ext))) {
                         error = "File is not a valid image format";   
                     }
                 }

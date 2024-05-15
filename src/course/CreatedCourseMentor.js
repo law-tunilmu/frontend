@@ -1,7 +1,7 @@
 import { PiChalkboardTeacher } from "react-icons/pi";
 import { useParams } from "react-router-dom";
-import { CourseMiniView } from "../course/CourseMiniView";
-import { courseDummyData, courseLoader } from "../course/CourseLoader";
+import { CourseMiniView } from "./CourseMiniView";
+import { courseDummyData } from "./CourseLoader";
 
 export function CreatedCourseMentor() {
     const { mentorUsername } = useParams(); 

@@ -10,10 +10,10 @@ import AuthProvider from './auth/authProvider';
 import SignUp from './auth/SignUp';
 import CourseDetailView from './course/CourseDetailView';
 import { courseLoader } from './course/CourseLoader';
-import CourseEdit from './course/CourseEdit';
+import CourseEdit from './course/EditCourse';
 import { userLoader } from './auth/UserLoader';
 import { ProfileMePage } from './auth/ProfileMe';
-import { CreatedCourseMentor } from './auth/CreatedCourseMentor';
+import { CreatedCourseMentor } from './course/CreatedCourseMentor';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
