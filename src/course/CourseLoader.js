@@ -4,10 +4,13 @@ export async function courseLoader({ params }) {
     return courseDummyData(params.id);
 }
 
-export function batchCourseLoader({ page, page_size }) {
+export async function batchCourseLoader({ page, page_size }) {
+
+    if (page === 5) return [];
     const data = [];
-    for(let i=1; i < page_size; i++) {
-        data.push(courseDummyData(i));
+    await new Promise(r => setTimeout(() => r(), 5000));
+    for(let i=0; i < page_size; i++) {
+        data.push(courseDummyData(i+1));
     }
     return data;
 }

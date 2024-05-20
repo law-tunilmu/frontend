@@ -21,7 +21,7 @@ export function DeleteCourseBtn({courseTitle}) {
         <>
             <button 
                 className="text-white backdrop-blur-md rounded-md 
-                            bg-red-500 p-2 font-bold hover:bg-red-500/50"
+                            bg-red-600 p-2 font-bold hover:bg-red-400"
                 onClick={() => setIsOpen(true)}>
                 Delete
             </button>

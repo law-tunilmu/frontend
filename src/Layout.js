@@ -2,7 +2,7 @@ import { Fragment, useEffect, useRef } from 'react'
 import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuItems, MenuItem, MenuButton, Transition, useClose } from '@headlessui/react'
 import { useAuth } from './auth/authProvider'
 import { useNavigate } from 'react-router-dom'
-import { FaBars, FaUserAlt } from 'react-icons/fa'
+import { FaBars, FaUserAlt, FaAngleUp } from 'react-icons/fa'
 import { Link, Outlet } from 'react-router-dom'
 import { FaXmark } from 'react-icons/fa6'
 

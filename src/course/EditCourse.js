@@ -9,7 +9,7 @@ export function EditCourseBtn({courseId}) {
         <Link to={`/course/${courseId}/edit`}>
             <div className=" 
                     text-white backdrop-blur-md rounded-md bg-orange-500 
-                    p-2 font-bold hover:bg-orange-500/50"
+                    p-2 font-bold hover:bg-orange-300"
             >
                 Edit
             </div>
