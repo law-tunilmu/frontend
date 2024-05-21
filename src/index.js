@@ -14,6 +14,7 @@ import CourseEdit from './course/EditCourse';
 import { userLoader } from './auth/UserLoader';
 import { ProfileMePage } from './auth/ProfileMe';
 import { CreatedCourseMentor } from './course/CreatedCourseMentor';
+import CreateCourse from './course/CreateCourse';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -34,6 +35,9 @@ const router = createBrowserRouter([
       {
         path: "course/:id", element: <CourseDetailView />,
         loader: courseLoader
+      },
+      {
+        path: "course/create", element: <CreateCourse />
       },
       {
         path: "course/:id/edit", element: <CourseEdit />,
