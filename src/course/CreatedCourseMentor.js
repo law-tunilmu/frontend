@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { CourseMiniView } from "./CourseMiniView";
 import { batchCourseLoader } from "./CourseLoader";
 import { useInfiniteScroll, Loader, NoMoreData } from "../utility/useInfiniteScroll";
+import BackToTopBtn from "../components/BackToTop";
 
 export function CreatedCourseMentor() {
     const { mentorUsername } = useParams(); 
@@ -33,6 +34,7 @@ export function CreatedCourseMentor() {
                 </div>
                 <div ref={loaderRef}> { isLoading && <Loader />} </div>
                 {isNoDataLeft && <NoMoreData />}
+                <BackToTopBtn />
             </div>
         </div>
     );

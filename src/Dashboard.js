@@ -3,6 +3,7 @@ import { useRef } from "react";
 import { useInfiniteScroll, Loader, NoMoreData } from "./utility/useInfiniteScroll";
 import { CourseMiniView } from "./course/CourseMiniView";
 import { batchCourseLoader } from "./course/CourseLoader";
+import BackToTopBtn from "./components/BackToTop";
 
 export default function Dashboard() {
     const loaderRef = useRef(null);
@@ -19,6 +20,7 @@ export default function Dashboard() {
             </div>
             <div ref={loaderRef}> { isLoading && <Loader />} </div>
             {isNoDataLeft && <NoMoreData />}
+            <BackToTopBtn />
         </div>
     );
 }
