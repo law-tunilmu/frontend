@@ -1,4 +1,7 @@
-export function userLoader() {
+// import axios from "axios"
+
+export async function userLoader() {
+    await new Promise(r => setTimeout(() => r(), 2000));
     return dummyUser();
 }
 
