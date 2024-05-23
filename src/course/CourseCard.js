@@ -4,7 +4,7 @@ import React from "react";
 import { DeleteCourseBtn } from "./DeleteCourse";
 import { EditCourseBtn } from "./EditCourse";
 
-export function CourseMiniView({data, idx, isCreator=true}) {
+export function CourseCard({data, idx, isCreator=true}) {
     return (
         <div key={idx} className="border-2 border-solid flex flex-col gap-1 px-2 pb-2 w-full">
             <img

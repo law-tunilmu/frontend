@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import { FaClockRotateLeft } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import COURSE_CONST from "./CourseConstants";
-import courseFallback from "../images/courseFallback.png"
+import { CourseForm } from "./CourseForm";
+import CourseNotFound from "./CourseNotFound";
 
 export function EditCourseBtn({courseId}) {
     return (
@@ -20,170 +19,34 @@ export function EditCourseBtn({courseId}) {
 
 export default function CourseEdit() {
     const courseHeader = useLoaderData();
-
-    const [ formData, setFormData ] = useState({
-        "title": courseHeader.title,
-        "picture": null,
-        "description": courseHeader.description,
-        "price": courseHeader.price 
-    });
-
-    // reset picture input
-    const [ pictKey, setPictKey ] = useState(Date.now());
-
-    const [ errors, setError ] = useState({
-        "title": "",
-        "picture": "",
-        "description": "",
-        "price": ""
-    });
-
-    const handleReset = (htmlName) => {
-        return () => {
-            let defaultValue = null;
-            if (htmlName !== "picture") {
-                defaultValue = courseHeader[htmlName]; 
-            } else {
-                setPictKey(Date.now());
-            }
-            setFormData(prev => ({
-                ...prev,
-                [htmlName]: defaultValue
-            }));
-            setError(prev => ({
-                    ...prev,
-                    [htmlName]: ""
-                })
-            );
-        }
-    }
-    
-    const handleChange = (e) => {
-        const { name } = e.target;
-        let { value } = e.target;
-        if (name === "picture") {
-            value = e.target.files[0];
-        }
-        const error = validateInput(name, value);
-        
-        setError(prev => ({
-            ...prev, 
-            [name]: error
-        }));
-
-        if (!error) {
-            setFormData(prev => ({
-                ...prev,
-                [name]: value
-            }));
-        }
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-    }
-
-    
+    const [formData, setFormData] = useState(courseHeader);
+    const [errors, setErrors] = useState({});
     if (!courseHeader) {
-        <CourseNotFoundPage />
-    }
-    else {
+        return <CourseNotFound />;
+    } else {
         return (
-            <form action="" method="post" onSubmit={handleSubmit}>
-                <div className="bg-slate-800/90 sticky top-0 w-screen">
-                    <SubmitAndCancel courseId={courseHeader.id} />
-                </div>
-                <div className="px-2 sm:w-8/12 md:w-7/12 mx-auto flex flex-col gap-y-6 
-                                divide-y-2 divider-solid divide-slate-400">
-                    
-                    <div className="flex flex-col gap-2">
-                        <label htmlFor="picture" className="font-semibold text-md">Course Picture</label>
-                        <div className="h-fit w-fit mx-auto">
-                            <img 
-                                src={
-                                    (formData.picture && URL.createObjectURL(formData.picture)) || 
-                                    courseHeader.picture_url || courseFallback
-                                } 
-                                className={`object-cover max-h-64 sm:max-h-80 md:max-h-96`}
-                                alt=""
-                            />
-                            {errors.picture && <p className="text-red-500 font-semibold">{errors.picture}</p>}
-                        </div>
-                        <div className="w-full px-2 flex flex-row">
-                            <ResetBtn htmlName="Pic" onClick={handleReset("picture")} className="mr-2 flex-0 text-nowrap"/>
-                            <input 
-                                name="picture" type="file" onChange={handleChange} accept="image/*"
-                                key={pictKey}
-                                className=" w-full sm:w-fit file:border-0 file:bg-blue-500 file:rounded-md file:p-2
-                                            file:text-white file:font-semibold file:text-sm sm:file:text-md
-                                            hover:file:cursor-pointer hover:file:bg-blue-500/60"
-                            />
-                        </div>
-                    </div>
-                    
-                    <div className="grid grid-cols gap-y-2">
-                        <label htmlFor="title" className="font-bold text-md">Title</label>
-                        <textarea
-                            name="title"
-                            className="break-words"
-                            rows={3}
-                            value={formData.title}
-                            onChange={handleChange}
-                        />
-                        {errors.title && <p className="text-red-500 font-semibold">{errors.title}</p>}
-                        <ResetBtn htmlName="Title" onClick={handleReset("title")} />
-                    </div>
-                    
-                    <div className="grid grid-cols gap-y-2">
-                        <label htmlFor="description" className="font-bold text-md">Desription</label>
-                        <textarea
-                            name="description"
-                            className="break-words"
-                            rows={8}
-                            value={formData.description}
-                            onChange={handleChange}
-                        />
-                        {errors.description && <p className="text-red-500 font-semibold">{errors.description}</p>}
-                        <ResetBtn htmlName="Description" onClick={handleReset("description")} />
-                    </div>
-
-                    <div className="grid grid-cols">
-                        <label htmlFor="price" className="block font-bold text-md">
-                            Price
-                        </label>
-                        <div className="relative -z-10 mt-2 rounded-md shadow-sm flex flex-row gap-4">
-                            <div className="w-fit">
-                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3">
-                                    <span className="text-gray-600 sm:text-sm font-bold">$</span>
-                                </div>
-                                <input
-                                    type="number"
-                                    name="price"
-                                    min={0}
-                                    className="
-                                        block rounded-md border-0 py-1.5 pl-7 pr-3 left-3 
-                                        text-gray-900 ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 
-                                        focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
-                                    value={formData.price}
-                                    onChange={handleChange}
-                                    step={0.01}
-                                />
-                            </div>
-                            <button onClick={handleReset("price")}><FaClockRotateLeft/></button>
-                        </div>
-                        {errors.price && <p className="text-red-500 font-semibold">{errors.price}</p>}
-                    </div>
-                    
-                    <div className="mt-2 flex items-center bg-gray-200 w-full h-[50rem]">
+            <>
+                <CourseForm 
+                    className="mt-2 px-2 sm:w-8/12 md:w-7/12 mx-auto gap-y-6 
+                                divide-y-2 divider-solid divide-slate-400"
+                    courseData={courseHeader}
+                    submitCancelBtn={<SubmitAndCancel courseId={courseHeader.id}/>}
+                    submitOnTop={true}
+                    formUseState={[formData, setFormData]}
+                    errorUseState={[errors, setErrors]}
+                >
+                    <div className="mt-2 sm:w-8/12 md:w-7/12 mx-auto h-[50rem] bg-gray-200">
+                        <input name="abc" type="text" className="w-full" value={FormData.abc}/>
                         <div className="w-fit px-2 bg-gray-500 text-xl font-bold text-white mx-auto">
                             Contents here?
                         </div>
                     </div>
-                </div>
-            </form>
+                </CourseForm>
+            </>
         );
     }
 }
+
 
 function SubmitAndCancel({courseId}) {
     const navigate  = useNavigate();
@@ -194,15 +57,16 @@ function SubmitAndCancel({courseId}) {
 
     return (
         <div className="
-                w-full sm:w-8/12 md:w-7/12 mx-auto p-2 text-white
-                flex flex-col sm:flex-row justify-center items-center">
-            <p className="py-2 mx-2 text-md sm:text-lg">
+                sticky top-0 w-screen text-white bg-slate-800/90
+                flex flex-col gap-2 py-2 sm:flex-row justify-center place-items-center"
+            >
+            <p className="mx-2 text-md sm:text-lg">
                 Hit &#128293;<strong>Save</strong>&#128293; when you have done editing
             </p>
             <div>
                 <button
                     type="submit"
-                    className="mr-2 mb-2 bg-blue-500 hover:bg-blue-500/70 
+                    className="mr-2 bg-blue-500 hover:bg-blue-500/70 
                             text-sm sm:text-lg font-bold 
                             py-2 px-4 rounded w-fit
                             focus:outline-none focus:shadow-outline">
@@ -220,76 +84,4 @@ function SubmitAndCancel({courseId}) {
             </div>                        
         </div>
     );
-}
-
-function ResetBtn({htmlName, onClick, className=""}) {
-    return (
-        <button 
-            className={`
-                ${className} justify-self-end bg-gray-500 hover:bg-gray-500/50 py-2 px-4 
-                text-sm sm:text-md font-bold text-white rounded w-fit
-                focus:outline-none focus:shadow-outline`}
-            onClick={onClick}
-        >
-            {`Reset ${htmlName}`}
-        </button>
-    );
-}
-
-function CourseNotFoundPage() {
-    return (
-        <div className="flex flex-rows justify-center h-screen items-center">
-            <div className="w-fit h-fit p-2 bg-gray-200 mx-auto">
-                <p className="font-bold text-md sm:text-xl text-gray-600">Oops! course is not found</p>
-            </div>
-        </div>
-    );
-}
-
-const validateInput = (name, value) => {
-    let error = "";
-    const titleName = name[0].toUpperCase() + name.substring(1);
-    if (value) {
-        switch (name) {    
-            case "title":
-                if (value.length > COURSE_CONST.MAX_TITLE) {
-                    error = `${titleName} must be less than ${COURSE_CONST.MAX_TITLE} characters`;
-                }
-                break;
-    
-            case "description":
-                if (value.length > COURSE_CONST.MAX_DESC) {
-                    error = `${titleName} must be less than ${COURSE_CONST.MAX_DESC} characters`;
-                }
-                break;
-
-            case "price":
-                if (!(parseFloat(value))) {
-                    error = `${titleName} must be a valid number`;
-                }
-                else if(parseFloat(value) < 0) {
-                    error = `${titleName} must be positive or zero`;
-                }
-                break;
-
-            case "picture":
-                const file = value;
-                if (file && file.size > COURSE_CONST.MAX_PIC_SIZE*1_000_000) {
-                    error = `${titleName} is larger than ${COURSE_CONST.MAX_PIC_SIZE}MB`;
-                }
-                else {
-                    const parts = file.name.split(".");
-                    const ext = parts[parts.length - 1].toLowerCase();
-            
-                    if (ext && !(COURSE_CONST.PIC_EXTS.includes(ext))) {
-                        error = "File is not a valid image format";   
-                    }
-                }
-                break;
-
-            default:
-                break;
-        }
-    } 
-    return error;
 }

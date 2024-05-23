@@ -2,10 +2,10 @@ import { useRef } from "react";
 import { PiChalkboardTeacher } from "react-icons/pi";
 import { useParams } from "react-router-dom";
 
-import { CourseMiniView } from "./CourseMiniView";
 import { batchCourseLoader } from "./CourseLoader";
 import { useInfiniteScroll, Loader, NoMoreData } from "../utility/useInfiniteScroll";
 import BackToTopBtn from "../components/BackToTop";
+import { CourseCard } from "./CourseCard";
 
 export function CreatedCourseMentor() {
     const { mentorUsername } = useParams(); 
@@ -28,12 +28,15 @@ export function CreatedCourseMentor() {
                 </div>
             </div>
             <div className="mt-2 border-t-2 border-gray-600">
-                <p className="w-full text-md font-semibold pb-2 line-clamp-1">{`${mentorUsername}'s Courses`}</p>
+                <p className="w-full text-md font-semibold pb-2 line-clamp-1">
+                    Courses:
+                </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2">
-                    {[...items.map((course, idx) => <CourseMiniView data={course} key={idx}/>)]}
+                    {[...items.map((course, idx) => <CourseCard data={course} key={idx}/>)]}
                 </div>
                 <div ref={loaderRef}> { isLoading && <Loader />} </div>
                 {isNoDataLeft && <NoMoreData />}
+ 
                 <BackToTopBtn />
             </div>
         </div>
