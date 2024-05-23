@@ -3,6 +3,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import COURSE_CONST from "./CourseConstants";
+import courseFallback from "../images/courseFallback.png"
 
 export function EditCourseBtn({courseId}) {
     return (
@@ -27,6 +28,9 @@ export default function CourseEdit() {
         "price": courseHeader.price 
     });
 
+    // reset picture input
+    const [ pictKey, setPictKey ] = useState(Date.now());
+
     const [ errors, setError ] = useState({
         "title": "",
         "picture": "",
@@ -39,6 +43,8 @@ export default function CourseEdit() {
             let defaultValue = null;
             if (htmlName !== "picture") {
                 defaultValue = courseHeader[htmlName]; 
+            } else {
+                setPictKey(Date.now());
             }
             setFormData(prev => ({
                 ...prev,
@@ -87,115 +93,90 @@ export default function CourseEdit() {
                 <div className="bg-slate-800/90 sticky top-0 w-screen">
                     <SubmitAndCancel courseId={courseHeader.id} />
                 </div>
-                <div className="sm:w-8/12 md:w-7/12 mx-auto divide-y-2 divider-solid divide-slate-400">
+                <div className="px-2 sm:w-8/12 md:w-7/12 mx-auto flex flex-col gap-y-6 
+                                divide-y-2 divider-solid divide-slate-400">
+                    
                     <div className="flex flex-col gap-2">
-                        <div className="h-fit w-full sm:w-7/12 md:w-6/12 mx-auto">
+                        <label htmlFor="picture" className="font-semibold text-md">Course Picture</label>
+                        <div className="h-fit w-fit mx-auto">
                             <img 
                                 src={
                                     (formData.picture && URL.createObjectURL(formData.picture)) || 
-                                    courseHeader.picture_url
+                                    courseHeader.picture_url || courseFallback
                                 } 
-                                className="object-scale-down h-64 sm:h-80"
+                                className={`object-cover max-h-64 sm:max-h-80 md:max-h-96`}
                                 alt=""
                             />
                             {errors.picture && <p className="text-red-500 font-semibold">{errors.picture}</p>}
                         </div>
-                        <div className="self-end flex flex-col gap-2 w-fit">
+                        <div className="w-full px-2 flex flex-row">
+                            <ResetBtn htmlName="Pic" onClick={handleReset("picture")} className="mr-2 flex-0 text-nowrap"/>
                             <input 
-                                name="picture" type="file" onChange={handleChange} accept="image/*" 
-                                className=" file:border-0 file:bg-indigo-500 file:rounded-md file:p-2
-                                            grid grid-col-1 
+                                name="picture" type="file" onChange={handleChange} accept="image/*"
+                                key={pictKey}
+                                className=" w-full sm:w-fit file:border-0 file:bg-blue-500 file:rounded-md file:p-2
                                             file:text-white file:font-semibold file:text-sm sm:file:text-md
-                                            hover:file:cursor-pointer hover:file:bg-indigo-500/60"
+                                            hover:file:cursor-pointer hover:file:bg-blue-500/60"
                             />
-                            <button 
-                                className="
-                                    bg-gray-500 hover:bg-gray-500/50 py-2 px-4 
-                                    text-sm sm:text-md font-bold text-white rounded w-fit
-                                    focus:outline-none focus:shadow-outline"
-                                onClick={handleReset("picture")}
-                            >
-                                Reset Pic
-                            </button>
                         </div>
                     </div>
                     
-                    <div className="mt-3 grid grid-cols-1 w-11/12 mx-auto gap-y-[4rem] divider-solid divide-slate-400 divide-y-2">
+                    <div className="grid grid-cols gap-y-2">
+                        <label htmlFor="title" className="font-bold text-md">Title</label>
+                        <textarea
+                            name="title"
+                            className="break-words"
+                            rows={3}
+                            value={formData.title}
+                            onChange={handleChange}
+                        />
+                        {errors.title && <p className="text-red-500 font-semibold">{errors.title}</p>}
+                        <ResetBtn htmlName="Title" onClick={handleReset("title")} />
+                    </div>
+                    
+                    <div className="grid grid-cols gap-y-2">
+                        <label htmlFor="description" className="font-bold text-md">Desription</label>
+                        <textarea
+                            name="description"
+                            className="break-words"
+                            rows={8}
+                            value={formData.description}
+                            onChange={handleChange}
+                        />
+                        {errors.description && <p className="text-red-500 font-semibold">{errors.description}</p>}
+                        <ResetBtn htmlName="Description" onClick={handleReset("description")} />
+                    </div>
 
-                        <div className="grid grid-cols gap-y-2">
-                            <label htmlFor="title" className="font-bold text-md">Title</label>
-                            <textarea
-                                name="title"
-                                className="break-words"
-                                rows={3}
-                                value={formData.title}
-                                onChange={handleChange}
-                            />
-                            {errors.title && <p className="text-red-500 font-semibold">{errors.title}</p>}
-
-                            <button 
-                                className="
-                                    justify-self-end bg-gray-500 hover:bg-gray-500/50 py-2 px-4 
-                                    text-sm sm:text-md font-bold text-white rounded w-fit
-                                    focus:outline-none focus:shadow-outline"
-                                onClick={handleReset("title")}
-                            >
-                                Reset Title
-                            </button>
-                        </div>
-                        <div className="grid grid-cols gap-y-2">
-                            <label htmlFor="description" className="font-bold text-md">Desription</label>
-                            <textarea
-                                name="description"
-                                className="break-words"
-                                rows={8}
-                                value={formData.description}
-                                onChange={handleChange}
-                            />
-                            {errors.description && <p className="text-red-500 font-semibold">{errors.description}</p>}
-
-                            <button 
-                                className="
-                                    justify-self-end bg-gray-500 hover:bg-gray-500/50 py-2 px-4 
-                                    text-sm sm:text-md font-bold text-white rounded w-fit
-                                    focus:outline-none focus:shadow-outline"
-                                onClick={handleReset("description")}
-                            >
-                                Reset Desc
-                            </button>
-
-                        </div>
-                        <div className="grid grid-cols">
-                            <label htmlFor="price" className="block font-bold text-md">
-                                Price
-                            </label>
-                            <div className="relative mt-2 rounded-md shadow-sm flex flex-row gap-4">
-                                <div className="w-fit">
-                                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3">
-                                        <span className="text-gray-600 sm:text-sm font-bold">$</span>
-                                    </div>
-                                    <input
-                                        type="number"
-                                        name="price"
-                                        min={0}
-                                        className="
-                                            block rounded-md border-0 py-1.5 pl-7 pr-3 left-3 
-                                            text-gray-900 ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 
-                                            focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                        value={formData.price}
-                                        onChange={handleChange}
-                                        step={0.01}
-                                    />
+                    <div className="grid grid-cols">
+                        <label htmlFor="price" className="block font-bold text-md">
+                            Price
+                        </label>
+                        <div className="relative -z-10 mt-2 rounded-md shadow-sm flex flex-row gap-4">
+                            <div className="w-fit">
+                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3">
+                                    <span className="text-gray-600 sm:text-sm font-bold">$</span>
                                 </div>
-                                <button onClick={handleReset("price")}><FaClockRotateLeft/></button>
+                                <input
+                                    type="number"
+                                    name="price"
+                                    min={0}
+                                    className="
+                                        block rounded-md border-0 py-1.5 pl-7 pr-3 left-3 
+                                        text-gray-900 ring-2 ring-inset ring-gray-300 placeholder:text-gray-400 
+                                        focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                    step={0.01}
+                                />
                             </div>
-                            {errors.price && <p className="text-red-500 font-semibold">{errors.price}</p>}
+                            <button onClick={handleReset("price")}><FaClockRotateLeft/></button>
                         </div>
-                        
-                        <div className="mt-2 flex items-center bg-gray-200 w-full h-[50rem]">
-                            <div className="w-fit px-2 bg-gray-500 text-xl font-bold text-white mx-auto">
-                                Contents here?
-                            </div>
+                        {errors.price && <p className="text-red-500 font-semibold">{errors.price}</p>}
+                    </div>
+                    
+                    <div className="mt-2 flex items-center bg-gray-200 w-full h-[50rem]">
+                        <div className="w-fit px-2 bg-gray-500 text-xl font-bold text-white mx-auto">
+                            Contents here?
                         </div>
                     </div>
                 </div>
@@ -221,7 +202,7 @@ function SubmitAndCancel({courseId}) {
             <div>
                 <button
                     type="submit"
-                    className="mr-2 mb-2 bg-indigo-500 hover:bg-indigo-500/70 
+                    className="mr-2 mb-2 bg-blue-500 hover:bg-blue-500/70 
                             text-sm sm:text-lg font-bold 
                             py-2 px-4 rounded w-fit
                             focus:outline-none focus:shadow-outline">
@@ -238,6 +219,20 @@ function SubmitAndCancel({courseId}) {
                 </button>
             </div>                        
         </div>
+    );
+}
+
+function ResetBtn({htmlName, onClick, className=""}) {
+    return (
+        <button 
+            className={`
+                ${className} justify-self-end bg-gray-500 hover:bg-gray-500/50 py-2 px-4 
+                text-sm sm:text-md font-bold text-white rounded w-fit
+                focus:outline-none focus:shadow-outline`}
+            onClick={onClick}
+        >
+            {`Reset ${htmlName}`}
+        </button>
     );
 }
 

@@ -1,4 +1,5 @@
 import courseFallback from "../images/courseFallback.png"
+import COURSE_CONST from "./CourseConstants";
 export default function CreateCourse() {
     return (
         <form action="" method="post" onSubmit={(e) => e.preventDefault()}>
@@ -17,18 +18,23 @@ export default function CreateCourse() {
                 </div>
 
                 <div className="grid grid-cols gap-y-2">
-                    <label htmlFor="picture" className="font-semibold text-md">Picture</label>
+                    <div>
+                        <label htmlFor="picture" className="font-semibold text-md">Course Picture</label>
+                        <p className="text-gray-500 text-xs font-semibold italic">
+                            Put the most iconic picture for your course
+                        </p>
+                    </div>
                     <div className="mt-1 h-fit w-fit mx-auto">
                         <img 
                             src={null || courseFallback} 
-                            className="aspect-[8/7] object-cover h-64 sm:h-80"
+                            className={`object-cover max-h-64 sm:max-h-80 md:max-h-96`}
                             alt=""
                         />
                     </div>
                     <input 
                         name="picture" type="file" accept="image/*" 
                         className=" w-fit file:border-0 file:bg-blue-500 file:rounded-md file:p-2                                    
-                                    file:text-white file:font-semisemibold file:text-sm sm:file:text-md
+                                    file:text-white file:font-semibold file:text-sm sm:file:text-md
                                     hover:file:cursor-pointer hover:file:bg-blue-800"
                     />
                 </div>
@@ -47,7 +53,7 @@ export default function CreateCourse() {
                     <label htmlFor="price" className="block font-semibold text-md">
                         Price
                     </label>
-                    <div className="relative mt-2 rounded-md shadow-sm flex flex-row gap-4">
+                    <div className="relative -z-10 mt-2 rounded-md shadow-sm flex flex-row gap-4">
                         <div className="w-fit">
                             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3">
                                 <span className="text-gray-600 sm:text-sm font-semibold">$</span>

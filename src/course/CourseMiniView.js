@@ -10,7 +10,7 @@ export function CourseMiniView({data, idx, isCreator=true}) {
             <img
                 src={data.picture_url}
                 alt=""
-                className="w-full object-scale-down h-64 sm:h-80"
+                className="object-cover max-w-full max-h-60 sm:max-h-96"
             />
             <div className="grid grid-cols-1 text-sm sm:text-md gap-2">
                 <Link to={`/course/${data.id}`}>
