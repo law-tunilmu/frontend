@@ -12,7 +12,8 @@ const EMPTY_COUSE = {
 }
 
 export function CourseForm({
-        children, submitCancelBtn, className="", courseData=EMPTY_COUSE, submitOnTop=false,
+        children, submitCancelBtn, className="", 
+        courseData=EMPTY_COUSE, submitOnTop=false,
         formUseState, errorUseState, handleSubmit
     }) {
     
@@ -147,7 +148,7 @@ export function CourseForm({
                                 step={0.01}
                             />
                         </div>
-                        <button onClick={handleReset("price")}><FaClockRotateLeft/></button>
+                        <button type="button" onClick={handleReset("price")}><FaClockRotateLeft/></button>
                     </div>
                     {errors.price && <p className="text-red-500 font-semibold">{errors.price}</p>}
                 </div>
@@ -163,6 +164,7 @@ export function CourseForm({
 function ResetBtn({htmlName, onClick, className=""}) {
     return (
         <button 
+            type="button"
             className={`
                 ${className} justify-self-end bg-gray-500 hover:bg-gray-500/50 py-2 px-4 
                 text-sm sm:text-md font-bold text-white rounded w-fit
@@ -179,6 +181,7 @@ function DefaultSubmitCancelBtn() {
         <div className="mt-4 w-full h-fit flex flex-row justify-end gap-2
                         text-white text-sm sm:text-lg font-bold">
             <button
+                type="reset"
                 className="bg-orange-500 hover:opacity-80 
                         py-2 px-4 rounded w-fit h-fit
                         focus:outline-none focus:shadow-outline">

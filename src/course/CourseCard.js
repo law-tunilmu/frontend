@@ -3,14 +3,16 @@ import React from "react";
 
 import { DeleteCourseBtn } from "./DeleteCourse";
 import { EditCourseBtn } from "./EditCourse";
+import courseFallback from "../images/courseFallback.png"
+import { loremIpsum } from "react-lorem-ipsum";
 
 export function CourseCard({data, idx, isCreator=true}) {
     return (
         <div key={idx} className="border-2 border-solid flex flex-col gap-1 px-2 pb-2 w-full">
             <img
-                src={data.picture_url}
+                src={data.picture_url || courseFallback}
                 alt=""
-                className="object-cover max-w-full max-h-60 sm:max-h-96"
+                className="object-cover max-w-full max-h-[15] min-h-[10rem] sm:min-h-[14rem] sm:max-h-[20rem]"
             />
             <div className="grid grid-cols-1 text-sm sm:text-md gap-2">
                 <Link to={`/course/${data.id}`}>
@@ -24,8 +26,8 @@ export function CourseCard({data, idx, isCreator=true}) {
                     <Link to={`/mentor/courses/${data.creator}`}>{data.creator}</Link>
                 </p>
                 <p className="font-bold">$ {data.price}</p>
-                <div className="text-justify relative line-clamp-[9]">
-                    {data.description}
+                <div className="grow text-justify relative line-clamp-[9] min-h-16">
+                    <strong>Description: </strong>{data.description}
                     <div className="absolute bottom-0 right-0 h-fit w-fit flex flex-row z-1 
                                     gap-2 pt-1 backdrop-blur-sm"
                         >

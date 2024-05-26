@@ -3,7 +3,13 @@ import COURSE_CONST from "./CourseConstants";
 export function validateCourse (name, value) {
     let error = "";
     const titleName = name[0].toUpperCase() + name.substring(1);
-    if (value) {
+
+    if (!value) {
+        if (name !== "picture") {
+            error = `Please enter ${titleName}.`
+        }
+    }
+    else {
         switch (name) {    
             case "title":
                 if (value.length > COURSE_CONST.MAX_TITLE) {
@@ -22,7 +28,7 @@ export function validateCourse (name, value) {
                     error = `${titleName} must be a valid number`;
                 }
                 else if(parseFloat(value) < 0) {
-                    error = `${titleName} must be positive or zero`;
+                    error = `${titleName} must NOT be negative`;
                 }
                 break;
 

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 import { ThreeDots } from "react-loader-spinner";
 
-export function useInfiniteScroll({loaderRef, dataFetcher, dataLen=2, startIndex=0}) {
+export function useInfiniteScroll({loaderRef, dataFetcher, dataLen=4, startIndex=0}) {
     const [items, setItems] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
@@ -15,7 +15,7 @@ export function useInfiniteScroll({loaderRef, dataFetcher, dataLen=2, startIndex
         setErrors({});
         try {
             const newData = await dataFetcher({page:index, page_size:dataLen});
-            if (newData.length > 0) {
+            if (newData.length === dataLen) {
                 setItems(prev => [...prev, ...newData]);
                 setIndex((prevIndex) => prevIndex + 1);
             }

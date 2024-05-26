@@ -1,3 +1,4 @@
+import axios from "axios";
 import { loremIpsum } from "react-lorem-ipsum";
 
 export async function courseLoader({ params }) {
@@ -5,14 +6,19 @@ export async function courseLoader({ params }) {
 }
 
 export async function batchCourseLoader({ page, page_size }) {
-
-    if (page === 5) return [];
-    const data = [];
-    await new Promise(r => setTimeout(() => r(), 5000));
-    for(let i=0; i < page_size; i++) {
-        data.push(courseDummyData(i+1));
+    const params = new URLSearchParams();
+    params.append("page", String(page));
+    params.append("page_size", String(page_size));
+    const courseBeUrl = `${process.env.REACT_APP_COURSE_BE}/course/list?${params}`;
+    try {
+        const result = await axios.get(
+            courseBeUrl
+        );
+        return result.data;
     }
-    return data;
+    catch(error) {
+        return [];
+    }
 }
 
 export function courseDummyData(id) {
