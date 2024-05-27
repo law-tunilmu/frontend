@@ -17,7 +17,7 @@ export function CreatedCourseMentor() {
     });
 
     return (
-        <div className="mx-auto flex flex-col w-11/12 lg:w-9/12 xl:w-7/12 divide-y-2 min-h-screen">
+        <div className="mx-auto flex flex-col w-11/12 lg:w-9/12 xl:w-7/12 divide-y-2 h-screen">
             <div className="flex flex-row items-center h-fit pl-2 lg:pl-8">
                 <PiChalkboardTeacher className="w-24 h-24"/>
                 <div className="grow pl-2">
@@ -31,7 +31,7 @@ export function CreatedCourseMentor() {
                 <p className="w-full text-md font-semibold pb-2 line-clamp-1">
                     Courses:
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {[...items.map((course, idx) => <CourseCard data={course} key={idx}/>)]}
                 </div>
                 <div ref={loaderRef}> { isLoading && <Loader />} </div>

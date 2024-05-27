@@ -14,8 +14,8 @@ export default function Dashboard() {
     });
     
     return (
-        <div className="justify-center container w-11/12 lg:w-10/12 xl:w-8/12 mx-auto min-h-screen mt-2">
-            <div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2 md:gap-4">
+        <div className="justify-center container w-11/12 lg:w-10/12 xl:w-8/12 mx-auto h-screen mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 w-full gap-2 md:gap-4">
                 {[...items.map((course, idx) => <CourseCard data={course} key={idx}/>)]}
             </div>
             <div ref={loaderRef}> { isLoading && <Loader />} </div>
