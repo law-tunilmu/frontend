@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { validateCourse } from "./courseValidator";
 import courseFallback from "../images/courseFallback.png"
+import { useNavigate } from "react-router-dom";
 
 
 const EMPTY_COUSE = {
@@ -13,7 +14,7 @@ const EMPTY_COUSE = {
 
 export function CourseForm({
         children, submitCancelBtn, className="", 
-        courseData=EMPTY_COUSE, submitOnTop=false,
+        defaultValues=EMPTY_COUSE, submitOnTop=false,
         formUseState, errorUseState, handleSubmit
     }) {
     
@@ -27,7 +28,7 @@ export function CourseForm({
         return () => {
             let defaultValue = null;
             if (htmlName !== "picture") {
-                defaultValue = courseData[htmlName]; 
+                defaultValue = defaultValues[htmlName]; 
             } else {
                 setPictKey(Date.now());
             }
@@ -93,7 +94,7 @@ export function CourseForm({
                         <img 
                             src={
                                 (formData.picture && URL.createObjectURL(formData.picture)) || 
-                                courseData.picture_url || courseFallback
+                                defaultValues.picture_url || courseFallback
                             } 
                             className="object-cover max-h-64 sm:max-h-80 md:max-h-96"
                             alt=""
@@ -177,11 +178,17 @@ function ResetBtn({htmlName, onClick, className=""}) {
 }
 
 function DefaultSubmitCancelBtn() {
+    const navigate = useNavigate();
+
+    const handleCancel = () => {
+        navigate(`/`);
+    }
+
     return (
         <div className="mt-4 w-full h-fit flex flex-row justify-end gap-2
                         text-white text-sm sm:text-lg font-bold">
             <button
-                type="reset"
+                onClick={handleCancel}
                 className="bg-orange-500 hover:opacity-80 
                         py-2 px-4 rounded w-fit h-fit
                         focus:outline-none focus:shadow-outline">

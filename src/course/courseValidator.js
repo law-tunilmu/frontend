@@ -24,7 +24,7 @@ export function validateCourse (name, value) {
                 break;
 
             case "price":
-                if (!(parseFloat(value))) {
+                if (isNaN(parseFloat(value))) {
                     error = `${titleName} must be a valid number`;
                 }
                 else if(parseFloat(value) < 0) {

@@ -3,7 +3,7 @@ import { CourseForm } from "./CourseForm";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { currentUsername, useAuth } from "../auth/authProvider";
+// import { currentUsername, useAuth } from "../auth/authProvider";
 import { validateCourse } from "./courseValidator";
 import { toBase64 } from "../utility/byteEncoding";
 import FormErrorMessage from "../components/FormErrorMessage";
@@ -59,7 +59,10 @@ const handleSubmit = (creator, formData, setErrors, navigate) => async (event) =
         return;
     }
     try {
-        const encodedImage = await toBase64(formData.picture);
+        let encodedImage = "";
+        if (formData.picture) {
+            encodedImage = await toBase64(formData.picture);
+        }
         const result = await axios.post(
             `${process.env.REACT_APP_COURSE_BE}/course/create`,
             {
@@ -70,7 +73,7 @@ const handleSubmit = (creator, formData, setErrors, navigate) => async (event) =
                 price: parseFloat(formData.price)
             }
         )
-        navigate(`/course/${result.data.id}`, {replace: true});
+        navigate(`/course/detail/${result.data.id}`, {replace: true});
     
     } catch(error) {
         if (error.name === "AxiosError") {

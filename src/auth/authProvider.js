@@ -73,7 +73,7 @@ export const useAuth = () => {
 };
 
 export const currentUsername = (token) => {
-  if (!token) return undefined;
+  if (!token) return;
 
   const decodedToken = JSON.parse(atob(token.split('.')[1]));
 

@@ -9,7 +9,6 @@ import Layout from './Layout';
 import AuthProvider from './auth/authProvider';
 import SignUp from './auth/SignUp';
 import CourseDetailView from './course/CourseDetailView';
-import { courseLoader } from './course/CourseLoader';
 import CourseEdit from './course/EditCourse';
 import { ProfileMePage } from './auth/ProfileMe';
 import { CreatedCourseMentor } from './course/CreatedCourseMentor';
@@ -32,15 +31,13 @@ const router = createBrowserRouter([
         path: "signup", element: <SignUp />
       },
       {
-        path: "course/:id", element: <CourseDetailView />,
-        loader: courseLoader
+        path: "course/detail/:id", element: <CourseDetailView />
       },
       {
         path: "course/create", element: <CreateCourse />
       },
       {
-        path: "course/:id/edit", element: <CourseEdit />,
-        loader: courseLoader
+        path: "course/edit/:id", element: <CourseEdit />,
       },
       {
         path: "user/me", element: <ProfileMePage />

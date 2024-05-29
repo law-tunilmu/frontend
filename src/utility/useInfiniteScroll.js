@@ -10,12 +10,11 @@ export function useInfiniteScroll({loaderRef, dataFetcher, dataLen=4, startIndex
     const [index, setIndex] = useState(startIndex);
 
     const fetchData = useCallback(async () => {
-        if (isLoading || isNoDataLeft) return;
+        if (isLoading || isNoDataLeft || Object.values(errors).length) return;
         setIsLoading(true);
-        setErrors({});
         try {
             const newData = await dataFetcher({page:index, page_size:dataLen});
-            if (newData.length === dataLen) {
+            if (newData.length > 0) {
                 setItems(prev => [...prev, ...newData]);
                 setIndex((prevIndex) => prevIndex + 1);
             }
@@ -23,13 +22,14 @@ export function useInfiniteScroll({loaderRef, dataFetcher, dataLen=4, startIndex
                 setIsNoDataLeft(true);
             } 
         } catch (error) {
-            setErrors({
-                [error.name]: error.value
-            });
+            setErrors(prev => ({
+                ...prev,
+                ...error
+            }));
         } finally {
             setIsLoading(false);
         }
-    }, [index, isLoading, isNoDataLeft, dataFetcher, dataLen]);
+    }, [index, isLoading, isNoDataLeft, errors, dataFetcher, dataLen]);
 
     useEffect(() => {
         const currentRef = loaderRef.current;
