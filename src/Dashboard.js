@@ -14,7 +14,7 @@ export default function Dashboard() {
     const [isDescending, setIsDescending] = useState(false);
     
     return (
-        <div className="container w-11/12 lg:w-10/12 xl:w-8/12 mx-auto h-screen mt-2">
+        <div className="container w-11/12 lg:w-10/12 xl:w-8/12 mx-auto min-h-screen mt-2">
             <div className="w-full h-fit my-2 flex justify-end items-center gap-2">
                 <p className="font-semibold">sort by:</p>
                 <select className="rounded-md py-1" value={sortKey} onChange={e => setSortKey(e.target.value)}>
