@@ -5,6 +5,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { FaCartShopping, FaXmark } from 'react-icons/fa6'
 import { FaHome, FaSearch } from 'react-icons/fa'
 import { FiLogOut } from 'react-icons/fi'
+import { Bounce, ToastContainer, toast } from 'react-toastify';
 import axios from 'axios'
 
 
@@ -19,6 +20,19 @@ export default function Layout() {
     
     <>
       <NavBar chosen={chosen} setChosen={setChosen}/>
+      <ToastContainer 
+        position='top-center'
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme='colored'
+        transition={Bounce}
+      />
       <Outlet />      
       <div className='sm:hidden h-[30vh] w-full'></div>
       <Footer chosen={chosen} setChosen={setChosen}/>
@@ -45,7 +59,7 @@ function NavBar({chosen, setChosen}) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <nav className='w-screen h-[60px] bg-gray-800 flex items-center'>
+      <nav className='sticky top-0 z-[90] w-screen h-[60px] bg-gray-800 flex items-center'>
         <div className='mx-auto h-fit w-full sm:w-10/12 px-2 sm:px-6 lg:px-8 flex items-center justify-between'>
 
           <button className='relative inline-flex gap-2 items-center justify-center 
@@ -61,9 +75,7 @@ function NavBar({chosen, setChosen}) {
           </button>
 
           <div className='inline-flex items-center'>
-            {
-              token ? <Logout /> : <LoginSignUp />
-            }
+            { token ? <Logout /> : <LoginSignUp /> }
           </div>
 
         </div>
@@ -73,10 +85,10 @@ function NavBar({chosen, setChosen}) {
       <div className={classNames(
         isOpen ? "left-0":"left-[-100%]",
         "fixed top-0 bg-gray-800/95 w-[50vw] sm:w-[20vw] h-screen",
-        "flex flex-col transition px-2 gap-5 z-[100]"
+        "flex flex-col transition gap-5 z-[100]"
       )}>
         
-        <div className='flex items-center justify-between bg-gray-800 h-[60px] border-b-2'>
+        <div className='w-full flex items-center justify-between bg-gray-800 h-[60px] border-b-2 px-2'>
           <h1 className='font-bold text-white text-[20px]'>TUNILMU</h1>
           <button onClick={() => setIsOpen(false)}>
             <FaXmark className='size-8' color='white'/>
@@ -92,7 +104,7 @@ function NavBar({chosen, setChosen}) {
                               chosen === data.id ? 
                                       'bg-gray-700 text-white outline-none ring-2 ring-inset ring-white':
                                       'text-gray-400',
-                              'font-semibold rounded-md p-2', 
+                              'font-semibold rounded-md px-4 py-2', 
                               'hover:bg-gray-700 hover:text-white focus:outline-none',
                               'focus:ring-2 focus:ring-inset focus:ring-white'
                             )
@@ -145,10 +157,11 @@ function Logout() {
     try {
       await axios.get(beUrl);
     } catch (e) {
-      // ignore error, AUTH BE will invalidate the token
+      // ignore error, AUTH BE will eventually invalidate the token
     } finally {
       setToken();
       navigate('/', { replace: true });
+      toast("Good Bye", {type: "info"});
     }
   }
   return (

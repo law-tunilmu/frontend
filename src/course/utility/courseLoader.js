@@ -1,5 +1,6 @@
 import axios from "axios";
 import { loremIpsum } from "react-lorem-ipsum";
+import ERRORS from "../components/ErrorPages";
 
 export async function courseLoader({ params }) {
     return courseDummyData(params.id);
@@ -23,9 +24,10 @@ export async function batchCourseLoader({ page, page_size, sortKey, isDescending
         return result.data;
     }
     catch(error) {
-        let name = "fetcher";
+        let name = ERRORS.NETWORK;
         let message = "Network error. Please check your internet connection";
         if (error.response) {
+            name = ERRORS.SERVER;
             message = "Server error. Please try again later";
         }
         throw {
@@ -44,13 +46,14 @@ export async function singleCourseLoader({courseId}) {
         return result.data;
     }
     catch(error) {
-        let name = "network";
+        let name = ERRORS.NETWORK;
         let message = "Network Error. Please check your internet connection";
         if (error.response) {
             if (error.response.status === 404) {
-                return null;
+                name = ERRORS.NOT_FOUND;
+                message = "Course is not found";
             } else {
-                name = "server";
+                name = ERRORS.SERVER;
                 message = "Server Error. Please try again later";
             }
         }

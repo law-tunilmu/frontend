@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { FaClockRotateLeft } from "react-icons/fa6";
-import { validateCourse } from "./courseValidator";
-import courseFallback from "../images/courseFallback.png"
+import { validateCourse } from "../utility/courseValidator";
 import { useNavigate } from "react-router-dom";
+
+import courseFallback from "../../images/courseFallback.png"
 
 
 const EMPTY_COUSE = {
@@ -12,7 +13,7 @@ const EMPTY_COUSE = {
     "price": 0.0
 }
 
-export function CourseForm({
+export default function CourseForm({
         children, submitCancelBtn, className="", 
         defaultValues=EMPTY_COUSE, submitOnTop=false,
         formUseState, errorUseState, handleSubmit

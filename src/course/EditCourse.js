@@ -3,14 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-import { TbRobotOff, TbWifiOff } from "react-icons/tb";
-import { ThreeCircles } from "react-loader-spinner";
-
-import CourseNotFound from "./CourseNotFound";
-import { CourseForm } from "./CourseForm";
-import { singleCourseLoader } from "./courseLoader";
-import { validateCourse } from "./courseValidator";
+import CourseForm from "./components/CourseForm";
+import { singleCourseLoader } from "./utility/courseLoader";
+import { validateCourse } from "./utility/courseValidator";
 import { toBase64 } from "../utility/byteEncoding";
+import { FetchLoader } from "./components/LoaderPages";
+import { ErrorFetch } from "./components/ErrorPages";
+import { Bounce, toast } from "react-toastify";
 
 export function EditCourseBtn({courseId}) {
     return (
@@ -28,9 +27,10 @@ export function EditCourseBtn({courseId}) {
 export default function CourseEdit() {
     const { id } = useParams();
     const [courseHeader, setCourseHeader] = useState();
+    const [isFetching, setIsFetching] = useState(true);
+    const [fetchError, setFetchError] = useState();
+
     const [formData, setFormData] = useState();
-    const [isLoading, setIsLoading] = useState(true);
-    const [isLoadingErr, setIsLoadingErr] = useState();
     const [errors, setErrors] = useState({});
 
     const navigate = useNavigate();
@@ -42,53 +42,38 @@ export default function CourseEdit() {
                 setCourseHeader({...data});
                 setFormData(data);
             } catch(error) {
-                setIsLoadingErr(error);
+                setFetchError(error);
             } finally {
-                setIsLoading(false);
+                setIsFetching(false);
             }
         }
     
         fetchData();        
     }, [id])
-
-    if (isLoading) {
-        return (
-            <div className="mx-auto w-fit h-screen flex items-center">
-                <ThreeCircles color="#03cffc" />
-            </div>
-        );
-    }
-    else if (isLoadingErr) {
-        return (
-            <div className="w-full h-screen flex items-center justify-center text-lg md:text-[2rem] 
-                            bg-gradient-to-br from-gray-300">
-                {errors.name === "network" ? <TbWifiOff size={200}/> : <TbRobotOff size={200}/>}
-                    <span className="pl-2">{errors.message}</span>
-            </div>
-        )
-    } 
-    else if (!courseHeader) {
-        return <CourseNotFound />;
-    } else {
-        return (
-            <CourseForm 
-                className="mt-2 px-2 sm:w-8/12 md:w-7/12 mx-auto gap-y-6 
-                            divide-y-2 divider-solid divide-slate-400"
-                defaultValues={courseHeader}
-                submitCancelBtn={<SubmitAndCancel courseId={courseHeader.id}/>}
-                submitOnTop={true}
-                formUseState={[formData, setFormData]}
-                errorUseState={[errors, setErrors]}
-                handleSubmit={handleSubmit(formData, setErrors, navigate)}
-            >
-                <div className="mt-2 sm:w-8/12 md:w-7/12 mx-auto h-[50rem] bg-gray-200 flex items-center">
-                    <div className="w-fit px-2 bg-gray-500 text-xl font-bold text-white mx-auto">
-                        Contents here?
-                    </div>
-                </div>
-            </CourseForm>
-        );
-    }
+    return (
+        <FetchLoader isLoading={isFetching}>
+            <ErrorFetch errors={fetchError}>
+                {
+                    courseHeader && 
+                    <CourseForm 
+                        className="divide-y-2 divider-solid divide-slate-400"
+                        defaultValues={courseHeader}
+                        submitCancelBtn={<SubmitAndCancel courseId={courseHeader.id}/>}
+                        submitOnTop={true}
+                        formUseState={[formData, setFormData]}
+                        errorUseState={[errors, setErrors]}
+                        handleSubmit={handleSubmit(formData, setErrors, navigate)}
+                    >
+                        <div className="mt-2 sm:w-8/12 md:w-7/12 mx-auto h-[50rem] bg-gray-200 flex items-center">
+                            <div className="w-fit px-2 bg-gray-500 text-xl font-bold text-white mx-auto">
+                                Contents here?
+                            </div>
+                        </div>
+                    </CourseForm>
+                }
+            </ErrorFetch>
+        </FetchLoader>
+    );
 }
 
 
@@ -101,8 +86,9 @@ function SubmitAndCancel({courseId}) {
 
     return (
         <div className="
-                sticky top-0 w-screen text-white bg-slate-800/90
-                flex flex-col gap-2 py-2 sm:flex-row justify-center place-items-center"
+                sticky top-0 text-white bg-slate-800/90 z-[90]
+                flex flex-col gap-2 py-2 
+                sm:flex-row justify-center place-items-center"
             >
             <p className="mx-2 text-md sm:text-lg">
                 Hit &#128293;<strong>Save</strong>&#128293; when you have done editing
@@ -161,28 +147,32 @@ const handleSubmit = (formData, setErrors, navigate) => async (event) => {
                 price: parseFloat(formData.price)
             }
         )
-        navigate(`/course/detail/${result.data.id}`, {replace: true});   
+        navigate(`/course/detail/${result.data.id}`, {replace: true});
+        toast("Course has been updated", {
+            type: "info"
+        });  
     } catch(error) {
+        let message = "";
         if (error.name === "AxiosError") {
-            _name = "submit"
             if (error.response) {
                 if (error.response.status < 500) {  // 4xx error code
-                    _error = error.response.data.description;
+                    message = error.response.data.description;
                 }
                 else {
-                    _error = "Server error, please try again later";
+                    message = "Server error, please try again later";
                 }
             } else if (error.request) {
-                _error = "Network error, please check your internet connection"
+                message = "Network Error, please check your internet connection"
             }
         }
         else {
-            _name = "picture";
-            _error = "Cannot process course image";
+            message = "Cannot process course image";
         }
-        setErrors(prevErr => ({
-            ...prevErr, [_name]: _error
-        }))
+        toast(message, {
+            type: "error",
+            autoClose: false,
+            hideProgressBar: true,
+        });
 
     }
 }

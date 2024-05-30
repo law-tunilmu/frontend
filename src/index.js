@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Login from './auth/login';
+import Login from './auth/Login';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import Dashboard from './Dashboard';
@@ -13,8 +13,23 @@ import CourseEdit from './course/EditCourse';
 import { ProfileMePage } from './auth/ProfileMe';
 import { CreatedCourseMentor } from './course/CreatedCourseMentor';
 import CreateCourse from './course/CreateCourse';
+import CourseLayout from './course/CourseLayout';
+
+import 'react-toastify/ReactToastify.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const courseRouter =
+  {
+    path: 'course',
+    element: <CourseLayout />,
+    children: [
+      { path: "create", element: <CreateCourse /> },
+      { path: "detail/:id", element: <CourseDetailView /> },
+      { path: "edit/:id", element: <CourseEdit /> },
+      { path: "by/:mentorUsername", element: <CreatedCourseMentor /> }
+    ]
+  };
 
 const router = createBrowserRouter([
   {
@@ -31,20 +46,9 @@ const router = createBrowserRouter([
         path: "signup", element: <SignUp />
       },
       {
-        path: "course/detail/:id", element: <CourseDetailView />
-      },
-      {
-        path: "course/create", element: <CreateCourse />
-      },
-      {
-        path: "course/edit/:id", element: <CourseEdit />,
-      },
-      {
         path: "user/me", element: <ProfileMePage />
       },
-      {
-        path: "mentor/courses/:mentorUsername", element: <CreatedCourseMentor />
-      }
+      courseRouter
     ]
   }
 ]);

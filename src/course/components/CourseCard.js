@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import React from "react";
 
-import { DeleteCourseBtn } from "./DeleteCourse";
-import { EditCourseBtn } from "./EditCourse";
-import { useAuth, currentUsername } from "../auth/authProvider";
-import courseFallback from "../images/courseFallback.png"
+import { DeleteCourseBtn } from "../DeleteCourse";
+import { EditCourseBtn } from "../EditCourse";
+import { useAuth, currentUsername } from "../../auth/authProvider";
+import courseFallback from "../../images/courseFallback.png"
 
-export function CourseCard({data, idx}) {
+export default function CourseCard({data, idx}) {
     const { token } = useAuth();
     const username = currentUsername(token);
     const isCreator = username !== data.creator;
@@ -27,7 +27,7 @@ export function CourseCard({data, idx}) {
 
             <p className="text-green-700 line-clamp-1 pr-1">
                 <strong className="text-black">created by </strong>
-                <Link to={`/mentor/courses/${data.creator}`}>{data.creator}</Link>
+                <Link to={`/course/by/${data.creator}`}>{data.creator}</Link>
             </p>
             <p className="font-bold">$ <span className="text-">{data.price}</span></p>
             <div className="grow text-justify relative line-clamp-[7]">

@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react"
 import axios from "axios";
-import { useAuth } from "./authProvider";
+import { currentUsername, useAuth } from "./authProvider";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-import FormErrorMessage from "../components/FormErrorMessage";
+import { toast } from "react-toastify";
 
 const LOGIN_BE_URL=`${process.env.REACT_APP_BACKEND_HOSTNAME}/auth/login`
 
@@ -13,7 +13,6 @@ function Login({redirect_to='/'}) {
     const { setToken } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [errMsg, setErrMsg] = useState();
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -27,18 +26,30 @@ function Login({redirect_to='/'}) {
             },
         )
         .then(response => {
-                setToken(response.data.token);
+                const token = response.data.token;
+                const username = currentUsername(token);
+                setToken(token);
+
                 navigate(redirect_to, { replace: true });
+                toast(`Welcome ${username}`, {
+                    type: "info"
+                });
             }
         ).catch(err => {
+            let msg = "";
             if (err.request) {
-                setErrMsg("Network error, please check your internet connection");
+                msg = "Network error, please check your internet connection";
             }
-            else if (err.response) {
-                setErrMsg(err.response.data.description);
+            else if (err.response && err.response.status < 500) {
+                msg = err.response.data.description;
             } else {
-                setErrMsg("Server Error :(, please try again later");
+                msg = "Server Error :(, please try again later";
             }
+            toast(msg, {
+                type: "error",
+                autoClose: false,
+                hideProgressBar: true,
+            });
         })
     }
     
@@ -47,7 +58,6 @@ function Login({redirect_to='/'}) {
                 <div className="mx-auto mt-20 p-4 max-h-screen w-11/12 sm:w-6/12 lg:5/12 xl:w-4/12 border-2 border-gray-500">
                 
                     <h1 className="font-bold text-[2rem] text-gray-600">TUNILMU</h1>
-                    {errMsg && <FormErrorMessage message={errMsg} handleErrClose={_ => setErrMsg("")}/>}
 
                     <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                         <div className="sm:col-span-full">

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
 
-import FormErrorMessage from "../components/FormErrorMessage";
 import USER_CONSTRAINTS from "./UserConstans";
-import { PasswordShowHide } from "./login";
+import { PasswordShowHide } from "./Login";
 
 const SIGN_UP_BE_URL = `${process.env.REACT_APP_BACKEND_HOSTNAME}/auth/signup`
 
@@ -111,16 +111,20 @@ function SignUp() {
         )
         .then(_ => {
                 navigate('/login', { replace: true });
+                toast("Registration is successful", {
+                    type: "success"
+                });
             }
         ).catch(err => {
             let errorMsg = "Network Error. Please try again later.";
             if(err.response) {
                 errorMsg = "Username and/or email are already existed";
             } 
-            setError(prev => ({
-                ...prev,
-                "loginProcess":errorMsg
-              }));
+            toast(errorMsg, {
+                type: "error",
+                autoClose: false,
+                hideProgressBar: true,
+            });  
         })
     }
 
@@ -130,12 +134,6 @@ function SignUp() {
                 <h2 className="sm:col-span-full font-semibold text-[1.5rem] text-gray-800 mb-3">
                     <strong>Tunilmu</strong> User Profile
                 </h2>
-
-                {error.loginProcess && 
-                    <FormErrorMessage message={error.loginProcess} 
-                        handleErrClose={() => setError(prev => ({...prev, "loginProcess":""}))}
-                    />
-                }
 
                 <div className="sm:col-span-full">
                     <FieldLabel name="username" placeholder="John Doe" 
