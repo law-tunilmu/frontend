@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { useAuth } from './auth/authProvider'
 import { FaBars, FaUserAlt, FaBookmark } from 'react-icons/fa'
-import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { FaCartShopping, FaXmark } from 'react-icons/fa6'
 import { FaHome, FaSearch } from 'react-icons/fa'
-import { FiLogOut } from 'react-icons/fi'
-import { Bounce, ToastContainer, toast } from 'react-toastify';
-import axios from 'axios'
+import { Bounce, ToastContainer } from 'react-toastify';
+import LogoutBtn from './auth/Logout'
 
 
 function classNames(...classes) {
@@ -54,9 +53,10 @@ const SIDEBAR_DATA = [
   {id: "sb-create-course", name:'Create Course', to:'/course/create'},
 ];
 
-function NavBar({chosen, setChosen}) {
+function NavBar() {
   const { token } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+  const { pathname } = useLocation();
   return (
     <>
       <nav className='sticky top-0 z-[90] w-screen h-[60px] bg-gray-800 flex items-center'>
@@ -75,7 +75,7 @@ function NavBar({chosen, setChosen}) {
           </button>
 
           <div className='inline-flex items-center'>
-            { token ? <Logout /> : <LoginSignUp /> }
+            { token ? <LogoutBtn /> : <LoginSignUp /> }
           </div>
 
         </div>
@@ -98,10 +98,9 @@ function NavBar({chosen, setChosen}) {
         {
           SIDEBAR_DATA.map((data, idx) =>
             <Link key={idx} to={data.to} 
-                  onClick={() => setChosen(data.id)}
                   className={
                             classNames(
-                              chosen === data.id ? 
+                              pathname === data.to ? 
                                       'bg-gray-700 text-white outline-none ring-2 ring-inset ring-white':
                                       'text-gray-400',
                               'font-semibold rounded-md px-4 py-2', 
@@ -121,7 +120,8 @@ function NavBar({chosen, setChosen}) {
 }
 
 
-function Footer({chosen, setChosen}) {
+function Footer() {
+  const { pathname } = useLocation();
   return (
     <>
       <div className='fixed bottom-0 left-0 right-0 w-full h-fit bg-white z-[90]  flex justify-evenly
@@ -133,11 +133,10 @@ function Footer({chosen, setChosen}) {
             <Link key={idx} to={widget.to} 
                 className={
                   classNames(
-                    chosen === widget.name && 'bg-gray-300',
+                    pathname === widget.to && 'bg-gray-300',
                     'hover:bg-gray-400 p-2 w-fit h-full sm:w-full sm:h-fit'
                   )
                 }
-                onClick={() => setChosen(widget.name)}
             >
               {widget.icon}
             </Link>
@@ -146,33 +145,6 @@ function Footer({chosen, setChosen}) {
       </div>
     </>
   );
-}
-
-function Logout() {
-  const { setToken } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    const beUrl = process.env.REACT_APP_AUTH_BE + "/logout";
-    try {
-      await axios.get(beUrl);
-    } catch (e) {
-      // ignore error, AUTH BE will eventually invalidate the token
-    } finally {
-      setToken();
-      navigate('/', { replace: true });
-      toast("Good Bye", {type: "info"});
-    }
-  }
-  return (
-    <button className='flex gap-2 rounded-md p-2 text-gray-200 hover:bg-gray-700 
-                        hover:text-white focus:outline-none 
-                        focus:ring-2 focus:ring-inset focus:ring-white'
-            onClick={handleLogout}>
-        <p>Logout</p>
-        <FiLogOut className='size-6' />
-    </button>
-  )
 }
 
 function LoginSignUp() {

@@ -9,6 +9,9 @@ import { FetchLoader } from "./components/LoaderPages";
 import { ErrorFetch } from "./components/ErrorPages";
 
 import courseFallback from "../images/courseFallback.png";
+import { currentUsername, useAuth } from "../auth/authProvider";
+import { EditCourseBtn } from "./EditCourse";
+import { DeleteCourseBtn } from "./DeleteCourse";
 
 export default function CourseDetail() {
     const { id } = useParams();
@@ -44,6 +47,10 @@ export default function CourseDetail() {
 
 function Detail({courseHeader}) {
     const descRef = useRef(null);
+    
+    const { token } = useAuth();
+    const username = token ? currentUsername(token) : "";
+    
     const [
         isTruncatedDesc,
         isShowingMoreDesc,
@@ -58,7 +65,16 @@ function Detail({courseHeader}) {
     ] = useTruncatedElement({ref: titleRef});
 
     return (
-        <div className="flex flex-col">                    
+        <div className="relative flex flex-col">
+            {
+                username === courseHeader.creator &&
+                <div className="fixed right-0 bottom-20 md:right-5 xl:right-60 z-[20] 
+                                text-lg text-center flex flex-col gap-2">
+                    
+                    <EditCourseBtn courseId={courseHeader.id} className="grow flex items-center justify-center"/>
+                    <DeleteCourseBtn courseId={courseHeader.id} courseTitle={courseHeader.title} className="grow"/>
+                </div>
+            }                    
             <img 
                 src={courseHeader.picture_url || courseFallback} alt="" 
                 className="self-center object-cover min-h-[30vh] max-h-[43vh] md:min-h-[50vh] md:max-h-[60vh]"

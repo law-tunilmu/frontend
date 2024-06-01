@@ -1,11 +1,12 @@
 import { BsWifiOff } from "react-icons/bs";
-import { TbRobotOff } from "react-icons/tb";
-import { TbError404 } from "react-icons/tb";
+import { TbRobotOff, TbError404 } from "react-icons/tb";
+import { FaLock } from "react-icons/fa";
 
 const ERRORS = {
     NETWORK: 'network',
     SERVER: 'server',
-    NOT_FOUND: 'not_found'
+    NOT_FOUND: 'not_found',
+    AUTH: 'auth'
 };
 
 Object.freeze(ERRORS);
@@ -20,6 +21,8 @@ function ErrorIcon({errorName}) {
             return <BsWifiOff size={125}/>;
         case ERRORS.NOT_FOUND:
             return <TbError404 size={100}/>;
+        case ERRORS.AUTH:
+            return <FaLock size={100}/> 
         default:
             return <></>;
     }

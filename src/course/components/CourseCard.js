@@ -8,8 +8,7 @@ import courseFallback from "../../images/courseFallback.png"
 
 export default function CourseCard({data, idx}) {
     const { token } = useAuth();
-    const username = currentUsername(token);
-    const isCreator = username !== data.creator;
+    const isCreator = token && (currentUsername(token) === data.creator);
 
     return (
         <div key={idx} className="border-2 border-solid rounded-md text-sm sm:text-md
@@ -37,8 +36,8 @@ export default function CourseCard({data, idx}) {
                     >
                     <Link to={`/course/detail/${data.id}`}>
                         <div className=" 
-                                text-white rounded-md bg-blue-600 
-                                p-2 font-bold hover:bg-blue-500"
+                                text-white rounded-md bg-blue-500 
+                                p-2 font-bold hover:bg-blue-800"
                         >
                             Check Course
                         </div>

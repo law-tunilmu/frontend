@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FaCircleNotch } from "react-icons/fa";
 import axios from "axios";
 
 import USER_CONSTRAINTS from "./UserConstans";
 import { PasswordShowHide } from "./Login";
 
-const SIGN_UP_BE_URL = `${process.env.REACT_APP_BACKEND_HOSTNAME}/auth/signup`
+const SIGN_UP_BE_URL = `${process.env.REACT_APP_AUTH_BE}/auth/signup`
 
 function SignUp() {
     const navigate = useNavigate();
@@ -26,6 +27,8 @@ function SignUp() {
         loginProcess: '',
         role: ''
     })
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onInputChange = e => {
         const { name, value } = e.target;
@@ -77,6 +80,9 @@ function SignUp() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        if (isSubmitting) return;
+
         let _error = "";
         let _name = "";
         for (const name in input) {
@@ -95,6 +101,8 @@ function SignUp() {
             }));
             return
         }
+
+        setIsSubmitting(true);
         axios(
             {
                 method:"post",
@@ -112,20 +120,27 @@ function SignUp() {
         .then(_ => {
                 navigate('/login', { replace: true });
                 toast("Registration is successful", {
-                    type: "success"
+                    position: "top-right",
+                    type: "success",
+                    pauseOnHover: false,
+                    autoClose: 4000
                 });
             }
         ).catch(err => {
-            let errorMsg = "Network Error. Please try again later.";
-            if(err.response) {
-                errorMsg = "Username and/or email are already existed";
-            } 
-            toast(errorMsg, {
-                type: "error",
-                autoClose: false,
-                hideProgressBar: true,
-            });  
-        })
+                let errorMsg = "Network Error. Please try again later.";
+                if(err.response) {
+                    errorMsg = "Username and/or email are already existed";
+                } 
+                toast(errorMsg, {
+                    type: "error",
+                    autoClose: false,
+                    hideProgressBar: true,
+                });  
+            }
+        ).finally(() => {
+                setIsSubmitting(false);
+            }
+        )
     }
 
     return (
@@ -209,11 +224,17 @@ function SignUp() {
                             Cancel
                     </button>
                     <button 
-                        type="submit"
-                        className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white 
-                            shadow-sm hover:bg-sky-500 focus-visible:outline focus-visible:outline-2 
-                            focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-                            Save
+                        type="submit" 
+                        className=" col-span-full place-self-end w-fit py-2 px-2 rounded
+                                    inline-flex items-center gap-2 bg-blue-500 
+                                    hover:bg-sky-400 text-white font-bold 
+                                    focus:outline-none focus:shadow-outline">
+                        
+                            { 
+                                isSubmitting &&
+                                    <FaCircleNotch className="animate-spin h-full w-auto min-h-5" color="white"/> 
+                            }
+                            Register
                     </button>
                 </div>
             </div>

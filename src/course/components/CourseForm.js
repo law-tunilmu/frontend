@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FaClockRotateLeft } from "react-icons/fa6";
 import { validateCourse } from "../utility/courseValidator";
-import { useNavigate } from "react-router-dom";
 
 import courseFallback from "../../images/courseFallback.png"
 
@@ -13,9 +12,8 @@ const EMPTY_COUSE = {
     "price": 0.0
 }
 
-export default function CourseForm({
-        children, submitCancelBtn, className="", 
-        defaultValues=EMPTY_COUSE, submitOnTop=false,
+export default function CourseForm({ 
+        children, className="", defaultValues=EMPTY_COUSE,
         formUseState, errorUseState, handleSubmit
     }) {
     
@@ -66,9 +64,7 @@ export default function CourseForm({
     }
 
     return (
-        <form action="" method="post" onSubmit={handleSubmit} >
-            {submitOnTop && (submitCancelBtn || <DefaultSubmitCancelBtn />)}
-
+        <form action="" method="post" onSubmit={handleSubmit} className="relative">
             <div className={`${className} flex flex-col`}>
                 <div className="grid grid-cols gap-y-2">
                     <label htmlFor="title" className="font-bold text-md">Title</label>
@@ -158,7 +154,6 @@ export default function CourseForm({
             
             {children}
 
-            {(!submitOnTop) && (submitCancelBtn || <DefaultSubmitCancelBtn />)}
         </form>
     );
 }
@@ -175,33 +170,5 @@ function ResetBtn({htmlName, onClick, className=""}) {
         >
             {`Reset ${htmlName}`}
         </button>
-    );
-}
-
-function DefaultSubmitCancelBtn() {
-    const navigate = useNavigate();
-
-    const handleCancel = () => {
-        navigate(`/`);
-    }
-
-    return (
-        <div className="mt-4 w-full h-fit flex flex-row justify-end gap-2
-                        text-white text-sm sm:text-lg font-bold">
-            <button
-                onClick={handleCancel}
-                className="bg-orange-500 hover:opacity-80 
-                        py-2 px-4 rounded w-fit h-fit
-                        focus:outline-none focus:shadow-outline">
-                    Cancel
-            </button>
-            <button
-                type="submit"
-                className="mr-2 mb-2 bg-blue-500 hover:opacity-80 
-                            py-2 px-4 rounded w-fit h-fit
-                            focus:outline-none focus:shadow-outline">
-                    Save
-            </button>
-        </div>
     );
 }

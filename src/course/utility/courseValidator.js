@@ -5,7 +5,7 @@ export function validateCourse (name, value) {
     const titleName = name[0].toUpperCase() + name.substring(1);
 
     if (!value) {
-        if (name !== "picture") {
+        if (!(name === "picture" || name === "picture_url")) {
             error = `Please enter ${titleName}.`
         }
     }

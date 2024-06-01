@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { TiDelete } from "react-icons/ti";
 import axios from "axios";
 
@@ -88,7 +88,7 @@ function Content({finalQuery}) {
                     
 
                 {isNoDataLeft && items.length > 0 && <NoMoreData />}
-                {isNoDataLeft && items.length == 0 && <NoCourseFound />}
+                {isNoDataLeft && items.length === 0 && <NoCourseFound />}
             </ErrorFetch>
             <BackToTopBtn />  
         </>

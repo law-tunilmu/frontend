@@ -7,5 +7,6 @@ const USER_CONSTRAINTS = {
         MENTOR: 'MENTOR'
     }
 }
+Object.freeze(USER_CONSTRAINTS);
 
 export default USER_CONSTRAINTS;
