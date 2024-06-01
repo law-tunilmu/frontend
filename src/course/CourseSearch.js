@@ -42,7 +42,7 @@ export default function CourseSearch() {
                 <input 
                     type="search"
                     className="inline-flex items-center grow rounded-lg pr-10"
-                    placeholder="Search course"
+                    placeholder="Search course here"
                     value={query}
                     required={true}
                     onChange={handleChange}

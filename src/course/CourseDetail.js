@@ -121,7 +121,7 @@ function Detail({courseHeader}) {
                 2. handle onClick, buy the course
             */}
             <div className="sticky top-16 self-end flex flex-row max-w-full 
-                            bg-violet-600/30 p-2 rounded-lg items-center">
+                            bg-blue-400/30 p-2 rounded-lg items-center">
                 
                 <p className="py-2 mx-2 text-md sm:text-lg break-all">
                     For only <strong>${courseHeader.price}</strong>
@@ -129,7 +129,7 @@ function Detail({courseHeader}) {
                 
                 <button 
                     className="flex-0 w-fit h-fit py-2 px-4 rounded
-                                bg-violet-600 hover:bg-violet-800
+                                bg-blue-500 hover:bg-blue-800
                                 text-white text-sm sm:text-md font-bold  
                                 focus:outline-none focus:shadow-outline">
                     Get Full Access

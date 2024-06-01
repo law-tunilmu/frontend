@@ -40,11 +40,11 @@ export default function Layout() {
 }
 
 const WIDGETS = [
-  {name: 'home', to: '/', icon: <FaHome className='size-6' />},
-  {name: 'search', to: '/course/search', icon: <FaSearch className='size-6' />},
-  {name: 'collection', to: '#', icon: <FaBookmark className='size-6' />},
-  {name: 'cart', to: '#', icon: <FaCartShopping className='size-6' />},
-  {name: 'profile', to: '/user/me', icon: <FaUserAlt className='size-6' />}
+  {name: 'home', to: '/', icon: <FaHome className='size-6' color='white' />},
+  {name: 'search', to: '/course/search', icon: <FaSearch className='size-6' color='white' />},
+  {name: 'collection', to: '#', icon: <FaBookmark className='size-6' color='white' />},
+  {name: 'cart', to: '#', icon: <FaCartShopping className='size-6' color='white' />},
+  {name: 'profile', to: '/user/me', icon: <FaUserAlt className='size-6' color='white' />}
 ];
 
 const SIDEBAR_DATA = [
@@ -65,14 +65,15 @@ function NavBar() {
           <button className='relative inline-flex gap-2 items-center justify-center 
                               rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white 
                               focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'
-                  onClick={() => setIsOpen(prev => !prev)}
-          >
+                  onClick={() => setIsOpen(prev => !prev)}>
             {
               isOpen ? 
                 <FaXmark className="block h-6 w-6" aria-hidden="true" /> :
                 <FaBars className="block h-6 w-6" aria-hidden="true" />
             } 
           </button>
+
+          <p className='text-white font-semibold text-lg'>TUNILMU</p>
 
           <div className='inline-flex items-center'>
             { token ? <LogoutBtn /> : <LoginSignUp /> }
@@ -101,11 +102,10 @@ function NavBar() {
                   className={
                             classNames(
                               pathname === data.to ? 
-                                      'bg-gray-700 text-white outline-none ring-2 ring-inset ring-white':
+                                      'bg-white text-blue-500 outline-none':
                                       'text-gray-400',
-                              'font-semibold rounded-md px-4 py-2', 
-                              'hover:bg-gray-700 hover:text-white focus:outline-none',
-                              'focus:ring-2 focus:ring-inset focus:ring-white'
+                              'font-bold px-4 py-2', 
+                              'hover:bg-slate-200 hover:text-blue-500 focus:outline-none'
                             )
                           }
             >
@@ -124,7 +124,7 @@ function Footer() {
   const { pathname } = useLocation();
   return (
     <>
-      <div className='fixed bottom-0 left-0 right-0 w-full h-fit bg-white z-[90]  flex justify-evenly
+      <div className='fixed bottom-0 left-0 right-0 w-full h-fit bg-gray-800 z-[90] flex justify-evenly
                       sm:top-0 sm:bottom-0 sm:left-0 sm:w-fit sm:h-[60vh] sm:my-auto sm:flex-col 
                       shadow-lg rounded-md border-solid border-2 border-gray-200
                        '>
@@ -133,8 +133,8 @@ function Footer() {
             <Link key={idx} to={widget.to} 
                 className={
                   classNames(
-                    pathname === widget.to && 'bg-gray-300',
-                    'hover:bg-gray-400 p-2 w-fit h-full sm:w-full sm:h-fit'
+                    pathname === widget.to && 'bg-blue-500',
+                    'hover:bg-blue-500 p-2 w-fit h-full sm:w-full sm:h-fit'
                   )
                 }
             >

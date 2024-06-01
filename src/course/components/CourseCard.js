@@ -11,7 +11,7 @@ export default function CourseCard({data, idx}) {
     const isCreator = token && (currentUsername(token) === data.creator);
 
     return (
-        <div key={idx} className="border-2 border-solid rounded-md text-sm sm:text-md
+        <div key={idx} className="border-2 border-solid rounded-md text-sm sm:text-md bg-neutral-100
                                     w-full h-[60vh] sm:h-[80vh] flex flex-col gap-1 p-2">
             <img
                 src={data.picture_url || courseFallback}
@@ -24,9 +24,9 @@ export default function CourseCard({data, idx}) {
                 </p>
             </Link>
 
-            <p className="text-green-700 line-clamp-1 pr-1">
+            <p className="line-clamp-1 pr-1">
                 <strong className="text-black">created by </strong>
-                <Link to={`/course/by/${data.creator}`}>{data.creator}</Link>
+                <Link to={`/course/by/${data.creator}`} className="font-semibold text-orange-500">{data.creator}</Link>
             </p>
             <p className="font-bold">$ <span className="text-">{data.price}</span></p>
             <div className="grow text-justify relative line-clamp-[7]">
