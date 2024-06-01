@@ -8,7 +8,7 @@ import CourseCard from "./components/CourseCard";
 import BackToTopBtn from "../components/BackToTop";
 import ERRORS, { ErrorFetch } from "./components/ErrorPages";
 
-export function CreatedCourseMentor() {
+export default function CreatedCourseMentor() {
     const { mentorUsername } = useParams(); 
     const loaderRef = useRef(null);
 

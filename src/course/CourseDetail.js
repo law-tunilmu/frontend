@@ -5,11 +5,12 @@ import { FaAngleUp, FaAngleDown } from "react-icons/fa";
 
 import { useTruncatedElement } from "../utility/readMore";
 import { singleCourseLoader } from "./utility/courseLoader";
-import courseFallback from "../images/courseFallback.png";
 import { FetchLoader } from "./components/LoaderPages";
 import { ErrorFetch } from "./components/ErrorPages";
 
-export default function CourseDetailView() {
+import courseFallback from "../images/courseFallback.png";
+
+export default function CourseDetail() {
     const { id } = useParams();
 
     const [courseHeader, setCourseHeader] = useState();
@@ -35,13 +36,13 @@ export default function CourseDetailView() {
     return (
         <FetchLoader isLoading={isLoading}>
             <ErrorFetch errors={errors}>
-                {courseHeader && <CourseDetail courseHeader={courseHeader}/>}
+                {courseHeader && <Detail courseHeader={courseHeader}/>}
             </ErrorFetch>
         </FetchLoader>
     );
 }
 
-function CourseDetail({courseHeader}) {
+function Detail({courseHeader}) {
     const descRef = useRef(null);
     const [
         isTruncatedDesc,
@@ -103,7 +104,7 @@ function CourseDetail({courseHeader}) {
                 1. handle check if user has read access
                 2. handle onClick, buy the course
             */}
-            <div className="sticky top-3 self-end flex flex-row max-w-full 
+            <div className="sticky top-16 self-end flex flex-row max-w-full 
                             bg-violet-600/30 p-2 rounded-lg items-center">
                 
                 <p className="py-2 mx-2 text-md sm:text-lg break-all">

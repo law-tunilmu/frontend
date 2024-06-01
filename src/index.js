@@ -8,28 +8,10 @@ import Dashboard from './Dashboard';
 import Layout from './Layout';
 import AuthProvider from './auth/authProvider';
 import SignUp from './auth/SignUp';
-import CourseDetailView from './course/CourseDetailView';
-import CourseEdit from './course/EditCourse';
 import { ProfileMePage } from './auth/ProfileMe';
-import { CreatedCourseMentor } from './course/CreatedCourseMentor';
-import CreateCourse from './course/CreateCourse';
-import CourseLayout from './course/CourseLayout';
+import courseRoutes from './course/route';
 
 import 'react-toastify/ReactToastify.css';
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
-const courseRouter =
-  {
-    path: 'course',
-    element: <CourseLayout />,
-    children: [
-      { path: "create", element: <CreateCourse /> },
-      { path: "detail/:id", element: <CourseDetailView /> },
-      { path: "edit/:id", element: <CourseEdit /> },
-      { path: "by/:mentorUsername", element: <CreatedCourseMentor /> }
-    ]
-  };
 
 const router = createBrowserRouter([
   {
@@ -48,10 +30,12 @@ const router = createBrowserRouter([
       {
         path: "user/me", element: <ProfileMePage />
       },
-      courseRouter
+      courseRoutes
     ]
   }
 ]);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>

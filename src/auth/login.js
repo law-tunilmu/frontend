@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useRef, useState } from "react"
 import axios from "axios";
 import { currentUsername, useAuth } from "./authProvider";
@@ -8,8 +8,10 @@ import { toast } from "react-toastify";
 
 const LOGIN_BE_URL=`${process.env.REACT_APP_BACKEND_HOSTNAME}/auth/login`
 
-function Login({redirect_to='/'}) {
+function Login() {
     const navigate = useNavigate();
+    const { redirect_to } = useParams();
+
     const { setToken } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -29,8 +31,11 @@ function Login({redirect_to='/'}) {
                 const token = response.data.token;
                 const username = currentUsername(token);
                 setToken(token);
-
-                navigate(redirect_to, { replace: true });
+                if (redirect_to) {
+                    navigate(redirect_to, { replace: true });
+                } else {
+                    navigate("/", {replace: true});
+                }
                 toast(`Welcome ${username}`, {
                     type: "info"
                 });

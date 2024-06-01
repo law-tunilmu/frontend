@@ -42,7 +42,7 @@ export default function Layout() {
 
 const WIDGETS = [
   {name: 'home', to: '/', icon: <FaHome className='size-6' />},
-  {name: 'search', to: '#', icon: <FaSearch className='size-6' />},
+  {name: 'search', to: '/course/search', icon: <FaSearch className='size-6' />},
   {name: 'collection', to: '#', icon: <FaBookmark className='size-6' />},
   {name: 'cart', to: '#', icon: <FaCartShopping className='size-6' />},
   {name: 'profile', to: '/user/me', icon: <FaUserAlt className='size-6' />}
