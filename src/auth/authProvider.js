@@ -3,6 +3,7 @@
 // Code for Token Validity and Expiration Strategy
 import axios from 'axios';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
 
 
 const AuthContext = createContext();
@@ -22,7 +23,6 @@ const checkTokenValidity = (token) => {
 const handleExpiredToken = () => {
   delete axios.defaults.headers.common['Authorization'];
   localStorage.removeItem('token');
-
 };
 
 const AuthProvider = ({ children }) => {
@@ -48,6 +48,9 @@ const AuthProvider = ({ children }) => {
       // Set a timeout to automatically log out the user when the token expires
       setTimeout(() => {
         handleExpiredToken();
+        toast("Session Timeout, Please login again.", {
+          type: "info"
+        })
       }, timeUntilExpiration);
     } else {
       // Token is invalid or expired, handle accordingly
@@ -73,9 +76,11 @@ export const useAuth = () => {
 };
 
 export const currentUsername = (token) => {
-  if (!token) return undefined;
+  if (!token) return;
+
   const decodedToken = JSON.parse(atob(token.split('.')[1]));
-  return decodedToken.iat;  
+
+  return decodedToken.sub;  
 }
 
 export default AuthProvider;

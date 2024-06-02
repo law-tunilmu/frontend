@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { FaCircleNotch } from "react-icons/fa";
 import axios from "axios";
 
-import FormErrorMessage from "../components/FormErrorMessage";
+import USER_CONSTRAINTS from "./UserConstans";
+import { PasswordShowHide } from "./Login";
 
-const SIGN_UP_BE_URL = `${process.env.REACT_APP_BACKEND_HOSTNAME}/auth/signup`
-const ROLES = {"STUDENT": "STUDENT", "MENTOR": "MENTOR"};
+const SIGN_UP_BE_URL = `${process.env.REACT_APP_AUTH_BE}/auth/signup`
 
 function SignUp() {
     const navigate = useNavigate();
@@ -13,7 +15,8 @@ function SignUp() {
         username: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '', 
+        role: USER_CONSTRAINTS.ROLES.STUDENT
       });
      
     const [error, setError] = useState({
@@ -21,68 +24,85 @@ function SignUp() {
         email: '',
         password: '',
         confirmPassword: '',
-        loginProcess: ''
+        loginProcess: '',
+        role: ''
     })
 
-    const [role, setRole] = useState(ROLES.STUDENT);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const onInputChange = e => {
         const { name, value } = e.target;
+        
+        const error = validateInput(name, value);
+
+        setError(prevErr => ({
+            ...prevErr,
+            [name]: error
+        }));
+
         setInput(prev => ({
           ...prev,
           [name]: value
         }));
-        validateInput(name, value);
-    }
-
-    const onRoleChange = e => {
-        setRole(e.target.value);
     }
        
     const validateInput = (name, value) => {
-        setError(prev => {
-            const stateObj = { ...prev, [name]: "" };
-    
-            switch (name) {    
-            case "password":
-                if (!value) {
-                    stateObj[name] = "Please enter Password.";
-                } else if (input.confirmPassword && value !== input.confirmPassword) {
-                    stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
-                } else {
-                    stateObj["confirmPassword"] = input.confirmPassword ? "" : error.confirmPassword;
-                }
-                break;
-    
-            case "confirmPassword":
-                if (!value) {
-                    stateObj[name] = "Please enter Confirm Password.";
-                } else if (input.password && value !== input.password) {
-                    stateObj[name] = "Password and Confirm Password does not match.";
-                }
-                break;
-    
-            default:
-                if (!value) {
-                    stateObj[name] = `Please enter ${name}.`;
-                }
-                break;
+        let error = "";
+        if (!value) {
+            error = `Please enter ${name}.`;
+        }
+        else {
+            switch (name) {
+                case "username":
+                    if (input.username.length > USER_CONSTRAINTS.USERNAME.MAX_LEN) {
+                        error = `Username must not be larger than 
+                                                ${USER_CONSTRAINTS.USERNAME.MAX_LEN} characters`
+                    }   
+                    break; 
+                case "password":
+                    if (input.confirmPassword && value !== input.confirmPassword) {
+                        error = "Password and Confirm Password does not match.";
+                    }
+                    break;
+        
+                case "confirmPassword":
+                    if (input.password && value !== input.password) {
+                        error = "Password and Confirm Password does not match.";
+                    }
+                    break;
+        
+                default:
+                    break;
             }
-    
-            return stateObj;
-        });
+        }
+        return error;
     }
 
     const handleSubmit = (e) => {
-        e.preventDefault()
-        if(error.username || error.email || error.password || error.confirmPassword ) return
-        if(!(input.username || input.email || input.password)) {
+        e.preventDefault();
+        
+        if (isSubmitting) return;
+
+        let _error = "";
+        let _name = "";
+        for (const name in input) {
+            const err = validateInput(name, input[name]);
+            if (err) {
+                _name = name;
+                _error = err;
+                break
+            }
+        }
+
+        if( _error ) {
             setError(prev => ({
                 ...prev,
-                "username": "Please enter username."
-              }));
+                [_name]: _error
+            }));
             return
         }
+
+        setIsSubmitting(true);
         axios(
             {
                 method:"post",
@@ -93,96 +113,129 @@ function SignUp() {
                     "username": input.username,
                     "password":input.password, 
                     "email":input.email,
-                    "role":role || ROLES.STUDENT
+                    "role":input.role
                 },
             },
         )
         .then(_ => {
                 navigate('/login', { replace: true });
+                toast("Registration is successful", {
+                    position: "top-right",
+                    type: "success",
+                    pauseOnHover: false,
+                    autoClose: 4000
+                });
             }
         ).catch(err => {
-            let errorMsg = "Network Error. Please try again later.";
-            if(err.response) {
-                errorMsg = "Username and/or email are already existed";
-            } 
-            setError(prev => ({
-                ...prev,
-                "loginProcess":errorMsg
-              }));
-        })
+                let errorMsg = "Network Error. Please try again later.";
+                if(err.response) {
+                    errorMsg = "Username and/or email are already existed";
+                } 
+                toast(errorMsg, {
+                    type: "error",
+                    autoClose: false,
+                    hideProgressBar: true,
+                });  
+            }
+        ).finally(() => {
+                setIsSubmitting(false);
+            }
+        )
     }
 
     return (
-        <form action="" method="post" onSubmit={handleSubmit}>
-            <div className="mt-2 space-y-10 w-11/12 sm:w-4/5 md:w-2/5 mx-auto">
-                <div className="border-b border-gray-900/10 pb-12">
-                    <h2 className="font-semibold text-lg text-gray-800 mb-3">User Profile</h2>
+        <form id="signup" action="" method="post" onSubmit={handleSubmit}>
+            <div className="mt-2 w-11/12 sm:w-4/5 md:w-2/5 mx-auto grid grid-cols-1 sm:grid-cols-6 gap-6">
+                <h2 className="sm:col-span-full font-semibold text-[1.5rem] text-gray-800 mb-3">
+                    <strong>Tunilmu</strong> User Profile
+                </h2>
 
-                    {error.loginProcess && 
-                        <FormErrorMessage message={error.loginProcess} 
-                            handleErrClose={() => setError(prev => ({...prev, "loginProcess":""}))}
-                        />
-                    }
+                <div className="sm:col-span-full">
+                    <FieldLabel name="username" placeholder="John Doe" 
+                                handleChange={onInputChange}/>
+                    {error.username && <span className='err text-red-500'>{error.username}</span>}
+                </div>
+                
+                <div className="sm:col-span-full">
+                    <FieldLabel name="email" placeholder="John.doe@email.com" 
+                                handleChange={onInputChange}/>
+                    {error.email && <span className='err text-red-500'>{error.email}</span>}
+                </div>
+                
+                <div className="sm:col-span-full">
+                    <FieldLabel name="password" placeholder="********" 
+                                handleChange={onInputChange}/>
+                    {error.password && <span className='err text-red-500'>{error.password}</span>}
+                </div>
+                
+                <div className="sm:col-span-full">
+                    <FieldLabel name="confirmPassword" placeholder="********" 
+                                type="password" handleChange={onInputChange}/>
+                    {error.confirmPassword && <span className='err text-red-500'>{error.confirmPassword}</span>}
+                </div>
 
-                    <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
-                        <div className="sm:col-span-full">
-                            <FieldLabel name="username" placeholder="John Doe" handleChange={onInputChange}/>
-                            {error.username && <span className='err text-red-500'>{error.username}</span>}
+                <fieldset className="sm:col-span-full">
+                    <legend className="text-sm font-semibold leading-6 text-gray-900">Select Role</legend>
+                    <div className="mt-4 space-y-2">
+                        <div className="flex items-center gap-x-3">
+                            <input 
+                                name="studentRole" type="radio" 
+                                className="h-4 w-4 border-gray-600 bg-gray-100 
+                                            text-indigo-600 focus:ring-indigo-600"
+                                checked={!input.role || 
+                                            input.role === USER_CONSTRAINTS.ROLES.STUDENT}
+                                value={USER_CONSTRAINTS.ROLES.STUDENT}
+                                onChange={
+                                    () => setInput(prev => ({...prev, role:USER_CONSTRAINTS.ROLES.STUDENT}))
+                                }
+                            />
+                            <label htmlFor="studentRole" 
+                                    className="block text-sm font-medium 
+                                                leading-6 text-gray-900">
+                                Student
+                            </label>
                         </div>
-                        <div className="sm:col-span-full">
-                            <FieldLabel name="email" placeholder="John.doe@email.com" handleChange={onInputChange}/>
-                            {error.email && <span className='err text-red-500'>{error.email}</span>}
+                        <div className="flex items-center gap-x-3">
+                            <input 
+                                name="mentorRole" type="radio" 
+                                className="h-4 w-4 border-gray-600 bg-gray-100 
+                                            text-indigo-600 focus:ring-indigo-600"
+                                checked={input.role === USER_CONSTRAINTS.ROLES.MENTOR}
+                                value={USER_CONSTRAINTS.ROLES.MENTOR}
+                                onChange={
+                                    () => setInput(prev => ({...prev, role:USER_CONSTRAINTS.ROLES.MENTOR}))
+                                }
+                            />
+                            <label htmlFor="mentorRole" 
+                                    className="block text-sm font-medium 
+                                                leading-6 text-gray-900">
+                                Mentor
+                            </label>
                         </div>
-                        <div className="sm:col-span-full">
-                            <FieldLabel name="password" placeholder="********" type="password" handleChange={onInputChange}/>
-                            {error.password && <span className='err text-red-500'>{error.password}</span>}
-                        </div>
-                        <div className="sm:col-span-full">
-                            <FieldLabel name="confirmPassword" placeholder="********" type="password" handleChange={onInputChange}/>
-                            {error.confirmPassword && <span className='err text-red-500'>{error.confirmPassword}</span>}
-                        </div>
-                        <fieldset className="sm:col-span-full">
-                            <legend className="text-sm font-semibold leading-6 text-gray-900">Select Role</legend>
-                            {/* <p className="mt-1 text-sm leading-6 text-gray-600">Role is <span className="font-bold">PERMANENT</span></p> */}
-                            <div className="mt-4 space-y-6">
-                                <div className="flex items-center gap-x-3">
-                                    <input 
-                                        name="studentRole" type="radio" 
-                                        className="h-4 w-4 border-gray-600 bg-gray-100 text-indigo-600 focus:ring-indigo-600"
-                                        checked={!role || role === ROLES.STUDENT}
-                                        value={ROLES.STUDENT}
-                                        onChange={onRoleChange}
-                                    />
-                                    <label for="studentRole" className="block text-sm font-medium leading-6 text-gray-900">Student</label>
-                                </div>
-                                <div className="flex items-center gap-x-3">
-                                    <input 
-                                        name="mentorRole" type="radio" 
-                                        className="h-4 w-4 border-gray-600 bg-gray-100 text-indigo-600 focus:ring-indigo-600"
-                                        checked={role === ROLES.MENTOR}
-                                        value={ROLES.MENTOR}
-                                        onChange={onRoleChange}
-                                    />
-                                    <label for="mentorRole" className="block text-sm font-medium leading-6 text-gray-900">Mentor</label>
-                                </div>
-                            </div>
-                        </fieldset>
                     </div>
-                    <div className="mt-5 flex items-center justify-end gap-x-6 sm:max-w-lg">
-                        <button 
-                            type="button" 
-                            className="text-sm font-semibold leading-6 text-gray-900"
-                            onClick={() => navigate("/", {"replace": true})}>
-                                Cancel
-                        </button>
-                        <button 
-                            type="submit" 
-                            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white 
-                                shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 
-                                focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                Save
-                        </button>
-                    </div>
+                </fieldset>
+                
+                <div className="sm:col-span-full justify-self-end flex gap-x-3">
+                    <button 
+                        type="button" 
+                        className="text-sm font-semibold leading-6 text-gray-900 px-2 py-1 
+                                    bg-gray-200 hover:bg-gray-300 border-2 rounded-md"
+                        onClick={() => navigate("/", {"replace": true})}>
+                            Cancel
+                    </button>
+                    <button 
+                        type="submit" 
+                        className=" col-span-full place-self-end w-fit py-2 px-2 rounded
+                                    inline-flex items-center gap-2 bg-blue-500 
+                                    hover:bg-sky-400 text-white font-bold 
+                                    focus:outline-none focus:shadow-outline">
+                        
+                            { 
+                                isSubmitting &&
+                                    <FaCircleNotch className="animate-spin h-full w-auto min-h-5" color="white"/> 
+                            }
+                            Register
+                    </button>
                 </div>
             </div>
         </form>
@@ -190,21 +243,25 @@ function SignUp() {
 }
 
 function FieldLabel({name, placeholder, type="text", handleChange}) {
-    const nameTitleCase = (name !== "confirmPassword") ? name.charAt(0).toUpperCase() + name.substring(1) : "Confirm Password";
+    const nameTitleCase = (name !== "confirmPassword") ? 
+                            name.charAt(0).toUpperCase() + name.substring(1) : 
+                            "Confirm Password";
     return (
         <>
-          <label for={name} className="block text-sm font-semibold leading-6 text-gray-600">{nameTitleCase}</label>
-          <div className="mt-2">
-            <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-lg">
-              <input 
-                type={type} name={name} id={name}
-                autoComplete={name}
-                className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" 
-                placeholder={placeholder || name} 
-                onChange={handleChange}
-                />
-            </div>
-          </div>
+            <label htmlFor={name} className="mb-1 block text-sm font-semibold leading-6 text-gray-800">
+                {nameTitleCase}
+            </label>
+            {
+                (nameTitleCase === "Password") ?
+                <PasswordShowHide name={name} onChange={handleChange}/> :
+                <input 
+                    type={type} name={name}
+                    autoComplete={name}
+                    className="w-full rounded-md border-[2px] border-gray-400" 
+                    placeholder={placeholder || name} 
+                    onChange={handleChange}
+                /> 
+            }
         </>
     );
 }
