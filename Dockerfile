@@ -1,22 +1,20 @@
-FROM node:18-alpine
-
-# Set the working directory inside the container
+# module install
+FROM node:18-alpine as module-install-stage
 WORKDIR /app
-
-# Copy the package.json and package-lock.json files into the container
 COPY package*.json ./
-
-# Install project dependencies
 RUN npm install
 
-# Copy the rest of the application code into the container
+# build
+FROM node:18-alpine as build-stage
+COPY --from=module-install-stage /app/node_modules/ /app/node_modules
+WORKDIR /app
 COPY . .
-
-# Build the React app (replace 'npm run build' with your build command)
 RUN npm run build
 
-# Expose a port (if your React app runs on a specific port)
-EXPOSE 3000
+# serve
+FROM node:18-alpine
+COPY --from=build-stage /app/build/ /app/build
 
-# Define the command to start your application
-CMD ["npm", "start"]
+RUN npm install -g serve
+EXPOSE 3000
+CMD serve -s /app/build -l 3000
