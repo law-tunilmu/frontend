@@ -75,8 +75,8 @@ export default function CreateCourse() {
             let message = "";
             if (error.name === "AxiosError") {
                 if (error.response) {
-                    if (error.response.status < 500) {  // 4xx error code
-                        message = error.response.data.description;
+                    if (error.response.data && error.response.data.detail) {
+                        message = error.response.data.detail;
                     }
                     else {
                         message = "Server error, please try again later";

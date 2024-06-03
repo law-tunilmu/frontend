@@ -23,8 +23,6 @@ const courseRoutes =
       { path: "search", element: <CourseSearch />},
       { path: "detail/:id", element: <CourseDetail /> },
       { path: "by/:mentorUsername", element: <CreatedCourseMentor /> },
-      // { path: "create", element: <CreateCourse /> },
-      // { path: "edit/:id", element: <CourseEdit /> },
       authenticatedCourse
     ]
   };
