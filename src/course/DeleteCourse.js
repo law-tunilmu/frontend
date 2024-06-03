@@ -48,7 +48,12 @@ export function DeleteCourseBtn({courseId, courseTitle, className=""}) {
         } catch(error) {
             let message = "";
             if (error.response) {
-                message = error.response.descriptoon || "Server Error. Please try again later";
+                if (error.response.data && error.response.data.detail) {
+                    message = error.response.data.detail;
+                }
+                else {
+                    message = "Server Error. Please try again later";
+                }
             } else {
                 message = "Network Error. Please check again your connection";
             }
