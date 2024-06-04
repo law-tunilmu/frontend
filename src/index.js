@@ -12,6 +12,7 @@ import { ProfileMePage } from './auth/ProfileMe';
 import courseRoutes from './course/route';
 
 import 'react-toastify/ReactToastify.css';
+import forumRoutes from './forum/router';
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,8 @@ const router = createBrowserRouter([
       {
         path: "user/me", element: <ProfileMePage />
       },
-      courseRoutes
+      courseRoutes,
+      forumRoutes
     ]
   }
 ]);
