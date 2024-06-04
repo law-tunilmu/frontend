@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useAuth } from './auth/authProvider'
-import { FaBars, FaUserAlt, FaBookmark } from 'react-icons/fa'
+import { FaBars, FaUserAlt, FaBookmark, FaForumbee, FaEnvelopeOpenText, FaPodcast } from 'react-icons/fa'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { FaCartShopping, FaXmark } from 'react-icons/fa6'
+import { FaCartShopping, FaPeopleGroup, FaXmark } from 'react-icons/fa6'
 import { FaHome, FaSearch } from 'react-icons/fa'
 import { Bounce, ToastContainer } from 'react-toastify';
 import LogoutBtn from './auth/Logout'
@@ -44,6 +44,7 @@ const WIDGETS = [
   {name: 'search', to: '/course/search', icon: <FaSearch className='size-6' color='white' />},
   {name: 'collection', to: '#', icon: <FaBookmark className='size-6' color='white' />},
   {name: 'cart', to: '#', icon: <FaCartShopping className='size-6' color='white' />},
+  {name: 'forum', to: '/forum', icon: <FaPeopleGroup className='size-6' color='white' />},
   {name: 'profile', to: '/user/me', icon: <FaUserAlt className='size-6' color='white' />}
 ];
 
